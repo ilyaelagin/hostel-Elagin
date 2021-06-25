@@ -1,11 +1,14 @@
 CREATE SCHEMA hostel;
 
+DROP SCHEMA hostel;
+
 CREATE TABLE guests
 (
     id IDENTITY PRIMARY KEY,
-    full_name VARCHAR2(50) NOT NULL,
+    name VARCHAR2(50) NOT NULL,
+    surname VARCHAR2(50) NOT NULL,
     passport VARCHAR2(50) UNIQUE,
-    foto int,
+    foto BYTEA,
     birth DATE,
     check_in DATE,
     check_out DATE,
@@ -34,3 +37,4 @@ CREATE TABLE roles (
     role VARCHAR2(20) PRIMARY KEY
 );
 
+DROP TABLE categories;
