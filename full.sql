@@ -1,7 +1,5 @@
 CREATE SCHEMA hostel;
 
-DROP SCHEMA hostel;
-
 CREATE TABLE categories
 (
     category    VARCHAR2(20) PRIMARY KEY,
@@ -10,10 +8,10 @@ CREATE TABLE categories
 
 CREATE TABLE apartments
 (
-    number        INTEGER PRIMARY KEY,
-    rooms         INTEGER,
-    cleaning_date TIMESTAMP,
-    category      VARCHAR2(20) REFERENCES categories (category)
+    number   INTEGER PRIMARY KEY,
+    rooms    INTEGER NOT NULL,
+    cleaning TIMESTAMP NOT NULL,
+    category VARCHAR2(20) NOT NULL REFERENCES categories (category)
 );
 
 CREATE TABLE guests
