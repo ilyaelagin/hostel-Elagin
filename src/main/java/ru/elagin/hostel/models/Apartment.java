@@ -14,6 +14,7 @@ public class Apartment {
     @Column(name = "rooms", nullable = false)
     private int rooms;
 
+//    TODO
     @OneToMany(mappedBy = "apartment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Guest> guestList;
 
