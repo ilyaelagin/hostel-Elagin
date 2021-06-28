@@ -21,14 +21,16 @@ public class Apartment {
     @Column(name = "rooms", nullable = false)
     private int rooms;
 
+    //TODO fetch = FetchType.EAGER
     @OneToMany(mappedBy = "apartment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Guest> guestList;
 
     @Column(name = "cleaning", nullable = false)
     private LocalDateTime cleaning;
 
+    //TODO fetch = FetchType.EAGER
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "category_id")
     @Column(name = "category", nullable = false)
     private Category category;
 

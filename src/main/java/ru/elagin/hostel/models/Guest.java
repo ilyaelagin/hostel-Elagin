@@ -36,8 +36,9 @@ public class Guest {
     @Column(name = "check_out")
     private LocalDate checkOut;
 
+    //TODO fetch = FetchType.EAGER
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "apartment_id")
     @Column(name = "apartment")
     private Apartment apartment;
 

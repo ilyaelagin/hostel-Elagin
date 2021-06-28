@@ -17,7 +17,7 @@ public class User {
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "role_id")
     @Column(name = "role", nullable = false)
     private Role role;
 
