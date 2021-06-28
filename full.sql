@@ -2,21 +2,23 @@ CREATE SCHEMA hostel;
 
 CREATE TABLE categories
 (
-    category    VARCHAR2(20) PRIMARY KEY,
+    id          LONG IDENTITY PRIMARY KEY,
+    category    VARCHAR2(20)  NOT NULL,
     description TEXT
 );
 
 CREATE TABLE apartments
 (
-    number   INTEGER PRIMARY KEY,
-    rooms    INTEGER NOT NULL,
-    cleaning TIMESTAMP NOT NULL,
+    id       LONG IDENTITY PRIMARY KEY,
+    number   INTEGER      NOT NULL,
+    rooms    INTEGER      NOT NULL,
+    cleaning TIMESTAMP    NOT NULL,
     category VARCHAR2(20) NOT NULL REFERENCES categories (category)
 );
 
 CREATE TABLE guests
 (
-    id        IDENTITY PRIMARY KEY,
+    id        LONG IDENTITY PRIMARY KEY,
     name      VARCHAR2(50) NOT NULL,
     surname   VARCHAR2(50) NOT NULL,
     passport  VARCHAR2(50) UNIQUE,
@@ -29,13 +31,13 @@ CREATE TABLE guests
 
 CREATE TABLE roles
 (
-    role VARCHAR2(20) PRIMARY KEY
+    id   LONG IDENTITY PRIMARY KEY,
+    role VARCHAR2(20) NOT NULL
 );
 
 CREATE TABLE users
 (
-    id   IDENTITY PRIMARY KEY,
+    id   LONG IDENTITY PRIMARY KEY,
     name VARCHAR2(20) NOT NULL,
     role VARCHAR2(20) NOT NULL REFERENCES roles (role)
-
 );

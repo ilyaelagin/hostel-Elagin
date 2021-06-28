@@ -1,7 +1,10 @@
 package ru.elagin.hostel.models;
 
+import lombok.Data;
+
 import javax.persistence.*;
 
+@Data
 @Entity
 @Table(name = "users", schema = "hostel")
 public class User {
@@ -13,8 +16,8 @@ public class User {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "role")
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "id")
     @Column(name = "role", nullable = false)
     private Role role;
 

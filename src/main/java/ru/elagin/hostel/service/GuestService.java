@@ -17,31 +17,42 @@ public class GuestService {
         this.guestRepository = guestRepository;
     }
 
-    public Guest saveGuest(Guest guest) {
+    public Guest save(Guest guest) {
         return guestRepository.save(guest);
     }
 
-    public void deleteGuest(Long id) {
+    public void delete(Long id) {
         guestRepository.deleteById(id);
     }
 
-    public void setGuestApartment(Long id, Apartment apartment) {
-        Guest guest = guestRepository.getById(id);
-        guest.setApartment(apartment);
+    public Guest setGuestApartment(Long id, Apartment apartment) {
+        Guest guestToUpdate = guestRepository.getById(id);
+        guestToUpdate.setApartment(apartment);
+
+        return guestToUpdate;
     }
 
-    public Guest editGuest(Long id, Guest guest) {
-        Guest guestToEdit = guestRepository.getById(id);
-//TODO
-
-        return guestToEdit;
+//    TODO
+    public Guest update(Long id, Guest guest) {
+        Guest guestToUpdate = guestRepository.getById(id);
+        if (guestToUpdate.getId() != 0) {
+            guestToUpdate.setName(guest.getName());
+            guestToUpdate.setSurname(guest.getSurname());
+            guestToUpdate.setPassport(guest.getPassport());
+            guestToUpdate.setFoto(guest.getFoto());
+            guestToUpdate.setBirth(guest.getBirth());
+            guestToUpdate.setCheckIn(guest.getCheckIn());
+            guestToUpdate.setCheckOut(guest.getCheckOut());
+            guestToUpdate.setApartment(guest.getApartment());
+        }
+        return guestToUpdate;
     }
 
-    public Guest findById(Long id) {
+    public Guest show(Long id) {
         return guestRepository.getById(id);
     }
 
-    public List<Guest> findAll() {
+    public List<Guest> index() {
         return guestRepository.findAll();
     }
 }

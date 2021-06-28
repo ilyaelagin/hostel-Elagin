@@ -1,8 +1,11 @@
 package ru.elagin.hostel.models;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 
+@Data
 @Entity
 @Table(name = "guests", schema = "hostel")
 public class Guest {
@@ -17,10 +20,10 @@ public class Guest {
     @Column(name = "surname", nullable = false)
     private String surname;
 
-    @Column(name = "passport")
+    @Column(name = "passport", unique = true)
     private String passport;
 
-    //TODO
+    //TODO тип данных
     @Column(name = "foto")
     private byte[] foto;
 
@@ -28,13 +31,13 @@ public class Guest {
     private LocalDate birth;
 
     @Column(name = "check_in")
-    private LocalDate check_in;
+    private LocalDate checkIn;
 
     @Column(name = "check_out")
-    private LocalDate check_out;
+    private LocalDate checkOut;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "number")
+    @JoinColumn(name = "id")
     @Column(name = "apartment")
     private Apartment apartment;
 
