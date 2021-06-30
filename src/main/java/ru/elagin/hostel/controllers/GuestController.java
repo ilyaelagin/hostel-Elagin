@@ -1,89 +1,50 @@
 package ru.elagin.hostel.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.elagin.hostel.models.Apartment;
-import ru.elagin.hostel.models.Guest;
+import ru.elagin.hostel.dto.GuestDTO;
+import ru.elagin.hostel.entities.Apartment;
+import ru.elagin.hostel.entities.Guest;
 import ru.elagin.hostel.service.GuestService;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/guests")
 public class GuestController {
 
     private final GuestService guestService;
 
-    @Autowired
-    public GuestController(GuestService guestService) {
-        this.guestService = guestService;
+    @PostMapping("/create")
+    public ResponseEntity<GuestDTO> createGuest(@RequestBody GuestDTO guestDTO) {
+        return guestService.createGuest(guestDTO);
     }
 
-    @PostMapping
-    public ResponseEntity<Guest> create(@RequestBody Guest guest)
-            throws URISyntaxException {
-        Guest createdGuest = guestService.save(guest);
-        if (createdGuest == null) {
-            return ResponseEntity.notFound().build();
-        } else {
-            URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-                    .path("/{id}")
-                    .buildAndExpand(createdGuest.getId())
-                    .toUri();
-
-            return ResponseEntity.created(uri)
-                    .body(createdGuest);
-        }
+    @DeleteMapping("/delete/{id}")
+    public void deleteGuest(@PathVariable Long id) {
+        guestService.deleteGuest(id);
     }
 
-    @DeleteMapping("{/id}")
-    public ResponseEntity<Object> delete(@PathVariable Long id) {
-        guestService.delete(id);
-        return ResponseEntity.noContent().build();
+    @PatchMapping("/{id}/apartment/")
+    public ResponseEntity<GuestDTO> setGuestApartment(@RequestBody Apartment apartment, @PathVariable Long id) {
+        return guestService.setGuestApartment(id, apartment);
     }
 
-    @PutMapping("{/id}")
-    public ResponseEntity<Guest> setGuestApartment(@RequestBody Apartment apartment, @PathVariable Long id) {
-        Guest updatedGuest = guestService.setGuestApartment(id, apartment);
-        if (updatedGuest == null) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(updatedGuest);
-        }
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Guest> updateGuest(@RequestBody GuestDTO guestDTO, @PathVariable Long id) {
+        return guestService.updateGuest(id, guestDTO);
     }
 
-    @PutMapping("{/id}")
-    public ResponseEntity<Guest> update(@RequestBody Guest guest, @PathVariable Long id) {
-        Guest updatedGuest = guestService.update(id, guest);
-        if (updatedGuest == null) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(updatedGuest);
-        }
-    }
-
-    @GetMapping
-    public ResponseEntity<List<Guest>> index() {
-        List<Guest> guestList = guestService.index();
-        if (guestList == null) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(guestList);
-        }
+    @GetMapping("/all-guests")
+    public ResponseEntity<List<Guest>> getAllGuest() {
+        return guestService.getAllGuest();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Guest> showOne(@PathVariable("id") Long id) {
-        Guest foundGuest = guestService.show(id);
-        if (foundGuest == null) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(foundGuest);
-        }
+    public ResponseEntity<Guest> getGuestById(@PathVariable("id") Long id) {
+        return guestService.getGuestById(id);
     }
 
 }

@@ -1,5 +1,5 @@
 /.idea
 *.iml
 /target
-db.mv.db
-db.trace.db
+hostel_db.mv.db
+hostel_db.trace.db

@@ -3,17 +3,17 @@ CREATE SCHEMA hostel;
 CREATE TABLE categories
 (
     id          LONG IDENTITY PRIMARY KEY,
-    category    VARCHAR2(20) NOT NULL,
+    name    VARCHAR2(20) NOT NULL,
     description TEXT
 );
 
 CREATE TABLE apartments
 (
     id          LONG IDENTITY PRIMARY KEY,
-    number      INTEGER   NOT NULL,
-    rooms       INTEGER   NOT NULL,
-    cleaning    TIMESTAMP NOT NULL,
-    category_id LONG      NOT NULL REFERENCES categories (id)
+    number      INTEGER NOT NULL,
+    rooms       INTEGER ,
+    cleaning    TIMESTAMP,
+    category_id LONG    NOT NULL REFERENCES categories (id)
 );
 
 CREATE TABLE guests
