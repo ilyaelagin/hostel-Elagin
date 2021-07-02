@@ -1,10 +1,9 @@
 package ru.elagin.hostel.dto;
 
 import lombok.Data;
-import ru.elagin.hostel.entities.Apartment;
 import ru.elagin.hostel.entities.Guest;
 
-import java.time.LocalDate;
+import java.util.Arrays;
 
 @Data
 public class GuestDTO {
@@ -16,38 +15,38 @@ public class GuestDTO {
     private String birth;
     private String checkIn;
     private String checkOut;
-    private String apartment;
+    private ApartmentDTO apartment;
 
-    public Guest convertToGuest() {
-        Guest guest = new Guest();
-        if (id != null) {
-            guest.setId(Long.valueOf(id));
+    public GuestDTO(Guest guest) {
+        if (guest == null) {
+            throw new IllegalArgumentException("Guest dos not exist");
         }
-        if (name != null) {
-            guest.setName(name);
+        if (guest.getId() != null) {
+            this.id = String.valueOf(guest.getId());
         }
-        if (surname != null) {
-            guest.setName(surname);
+        if (guest.getName() != null) {
+            this.name = guest.getName();
         }
-        if (passport != null) {
-            guest.setPassport(passport);
+        if (guest.getSurname() != null) {
+            this.surname = guest.getSurname();
         }
-        if (foto != null) {
-            guest.setFoto(foto.getBytes());
+        if (guest.getPassport() != null) {
+            this.passport = guest.getPassport();
         }
-        if (birth != null) {
-            guest.setBirth(LocalDate.parse(birth));
+        if (guest.getFoto() != null) {
+            this.foto = Arrays.toString(guest.getFoto());
         }
-        if (checkIn != null) {
-            guest.setCheckIn(LocalDate.parse(checkIn));
+        if (guest.getBirth() != null) {
+            this.birth = String.valueOf(guest.getBirth());
         }
-        if (checkOut != null) {
-            guest.setCheckOut(LocalDate.parse(checkOut));
+        if (guest.getCheckIn() != null) {
+            this.checkIn = String.valueOf(guest.getCheckIn());
         }
-        if (apartment != null) {
-            guest.setApartment(((Apartment.class.cast(apartment))));
+        if (guest.getCheckOut() != null) {
+            this.checkOut = String.valueOf(guest.getCheckOut());
         }
-
-        return guest;
+        if (guest.getApartment() != null) {
+            this.apartment = new ApartmentDTO(guest.getApartment());
+        }
     }
 }

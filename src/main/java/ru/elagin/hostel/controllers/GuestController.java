@@ -4,17 +4,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.elagin.hostel.dto.GuestDTO;
-import ru.elagin.hostel.entities.Apartment;
 import ru.elagin.hostel.entities.Guest;
 import ru.elagin.hostel.service.GuestService;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/guests")
 public class GuestController {
-
     private final GuestService guestService;
 
     @PostMapping("/create")
@@ -27,14 +26,14 @@ public class GuestController {
         guestService.deleteGuest(id);
     }
 
-    @PatchMapping("/{id}/apartment/")
-    public ResponseEntity<GuestDTO> setGuestApartment(@RequestBody Apartment apartment, @PathVariable Long id) {
-        return guestService.setGuestApartment(id, apartment);
+    @PostMapping("/add-apartment")
+    public ResponseEntity<Guest> setGuestApartment(@RequestBody Map<String, String> map) {
+        return guestService.setGuestApartment(map);
     }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<Guest> updateGuest(@RequestBody GuestDTO guestDTO, @PathVariable Long id) {
-        return guestService.updateGuest(id, guestDTO);
+        return guestService.updateGuest(guestDTO, id);
     }
 
     @GetMapping("/all-guests")

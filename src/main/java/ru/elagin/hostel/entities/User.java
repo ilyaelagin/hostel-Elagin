@@ -1,12 +1,13 @@
 package ru.elagin.hostel.entities;
 
 import lombok.Data;
+import ru.elagin.hostel.dto.UserDTO;
 
 import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "USERS", schema = "HOSTEL")
+@Table(name = "users", schema = "hostel")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,8 +17,31 @@ public class User {
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @Column(nullable = false)
+    private String surname;
+
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
+    public User() {
+    }
+
+    public User(UserDTO userDTO) {
+        if (userDTO == null) {
+            throw new IllegalArgumentException("User dos not exist");
+        }
+        if (userDTO.getId() != null) {
+            this.id = Long.valueOf(userDTO.getId());
+        }
+        if (userDTO.getName() != null) {
+            this.name = userDTO.getName();
+        }
+        if (userDTO.getSurname() != null) {
+            this.surname = userDTO.getSurname();
+        }
+        if (userDTO.getRole() != null) {
+            this.role = new Role(userDTO.getRole());
+        }
+    }
 }

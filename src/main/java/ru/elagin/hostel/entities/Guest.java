@@ -5,11 +5,10 @@ import ru.elagin.hostel.dto.GuestDTO;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Arrays;
 
 @Data
 @Entity
-@Table(name = "GUESTS", schema = "HOSTEL")
+@Table(name = "guests", schema = "hostel")
 public class Guest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +24,6 @@ public class Guest {
     @Column(unique = true)
     private String passport;
 
-    //TODO тип данных
     @Column
     private byte[] foto;
 
@@ -38,40 +36,44 @@ public class Guest {
     @Column(name = "check_out")
     private LocalDate checkOut;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "apartment_id")
     private Apartment apartment;
 
-    public GuestDTO convertToGuestDTO() {
-        GuestDTO guestDTO = new GuestDTO();
-        if (id != null) {
-            guestDTO.setId(String.valueOf(id));
-        }
-        if (name != null) {
-            guestDTO.setName(name);
-        }
-        if (surname != null) {
-            guestDTO.setName(surname);
-        }
-        if (passport != null) {
-            guestDTO.setPassport(passport);
-        }
-        if (foto != null) {
-            guestDTO.setFoto(Arrays.toString(foto));
-        }
-        if (birth != null) {
-            guestDTO.setBirth(String.valueOf(birth));
-        }
-        if (checkIn != null) {
-            guestDTO.setCheckIn(String.valueOf(checkIn));
-        }
-        if (checkOut != null) {
-            guestDTO.setCheckOut(String.valueOf(checkOut));
-        }
-        if (apartment != null) {
-            guestDTO.setApartment(String.valueOf(apartment));
-        }
+    public Guest() {
+    }
 
-        return guestDTO;
+    public Guest(GuestDTO guestDTO) {
+        if (guestDTO == null) {
+            throw new IllegalArgumentException("Guest dos not exist");
+        }
+        if (guestDTO.getId() != null) {
+            this.id = Long.valueOf(guestDTO.getId());
+        }
+        if (guestDTO.getName() != null) {
+            this.name = guestDTO.getName();
+        }
+        if (guestDTO.getSurname() != null) {
+            this.surname = guestDTO.getSurname();
+        }
+        if (guestDTO.getPassport() != null) {
+            this.passport = guestDTO.getPassport();
+        }
+        if (guestDTO.getFoto() != null) {
+            this.foto = guestDTO.getFoto().getBytes();
+        }
+        if (guestDTO.getBirth() != null) {
+            this.birth = LocalDate.parse(guestDTO.getBirth());
+        }
+        if (guestDTO.getCheckIn() != null) {
+            this.checkIn = LocalDate.parse(guestDTO.getCheckIn());
+        }
+        if (guestDTO.getCheckOut() != null) {
+            this.checkOut = LocalDate.parse(guestDTO.getCheckOut());
+        }
+        if (guestDTO.getApartment() != null) {
+            //TODO
+            this.apartment = new Apartment(guestDTO.getApartment());
+        }
     }
 }
