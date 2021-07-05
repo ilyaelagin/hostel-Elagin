@@ -19,9 +19,14 @@ public class GuestService {
     private final ApartmentRepository apartmentRepository;
 
     public ResponseEntity<GuestDTO> createGuest(GuestDTO guestDTO) {
-        Guest createdGuest = guestRepository.save(new Guest(guestDTO));
+        Apartment apartment = apartmentRepository.findById(guestDTO.getApartmentId()).orElse(null);
+        Guest guest = new Guest(guestDTO, apartment);
+        Guest createdGuest = guestRepository.save(guest);
         if (createdGuest.getId() == null) {
             throw new IllegalArgumentException("Guest not saved!");
+        }
+        if (apartment != null) {
+            apartment.getGuestList().add(createdGuest);
         }
         return ResponseEntity.ok(new GuestDTO(createdGuest));
     }
@@ -50,6 +55,9 @@ public class GuestService {
             throw new IllegalArgumentException("The apartment does not exist!");
         }
         guestToUpdate.setApartment(apartment);
+        List<Guest> guestList = apartment.getGuestList();
+        guestList.add(guestToUpdate);
+        apartment.setGuestList(guestList);
         guestRepository.save(guestToUpdate);
 
         return ResponseEntity.ok(guestToUpdate);
@@ -60,15 +68,17 @@ public class GuestService {
         if (guestToUpdate == null) {
             return ResponseEntity.notFound().build();
         }
+        Apartment apartment = apartmentRepository.getById(guestDTO.getApartmentId());
         //TODO refactor...
-        Guest ConvertedGuest = new Guest(guestDTO);
-        guestToUpdate.setName(ConvertedGuest.getName());
-        guestToUpdate.setSurname(ConvertedGuest.getSurname());
-        guestToUpdate.setPassport(ConvertedGuest.getPassport());
-        guestToUpdate.setFoto(ConvertedGuest.getFoto());
-        guestToUpdate.setBirth(ConvertedGuest.getBirth());
-        guestToUpdate.setCheckIn(ConvertedGuest.getCheckIn());
-        guestToUpdate.setCheckOut(ConvertedGuest.getCheckOut());
+        Guest convertedGuest = new Guest(guestDTO, apartment);
+        guestToUpdate.setName(convertedGuest.getName());
+        guestToUpdate.setSurname(convertedGuest.getSurname());
+        guestToUpdate.setPassport(convertedGuest.getPassport());
+        guestToUpdate.setFoto(convertedGuest.getFoto());
+        guestToUpdate.setBirth(convertedGuest.getBirth());
+        guestToUpdate.setCheckIn(convertedGuest.getCheckIn());
+        guestToUpdate.setCheckOut(convertedGuest.getCheckOut());
+        guestToUpdate.setApartment(convertedGuest.getApartment());
         guestRepository.save(guestToUpdate);
         return ResponseEntity.ok(guestToUpdate);
     }

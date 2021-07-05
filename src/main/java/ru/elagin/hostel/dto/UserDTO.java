@@ -8,7 +8,10 @@ public class UserDTO {
     private String id;
     private String name;
     private String surname;
-    private RoleDTO role;
+    private Long roleId;
+
+    public UserDTO() {
+    }
 
     public UserDTO(User user) {
         if (user == null) {
@@ -24,7 +27,7 @@ public class UserDTO {
             this.surname = user.getSurname();
         }
         if (user.getRole() != null) {
-            this.role = new RoleDTO(user.getRole());
+            this.roleId = user.getRole().getId();
         }
     }
 }

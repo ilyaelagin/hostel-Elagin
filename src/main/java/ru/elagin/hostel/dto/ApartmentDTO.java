@@ -3,17 +3,16 @@ package ru.elagin.hostel.dto;
 import lombok.Data;
 import ru.elagin.hostel.entities.Apartment;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Data
 public class ApartmentDTO {
     private String id;
     private String number;
     private String rooms;
-    private List<GuestDTO> guestList;
     private String cleaning;
-    private CategoryDTO category;
+    private Long categoryId;
+
+    public ApartmentDTO() {
+    }
 
     public ApartmentDTO(Apartment apartment) {
         if (apartment == null) {
@@ -28,14 +27,11 @@ public class ApartmentDTO {
         if (apartment.getRooms() != null) {
             this.rooms = String.valueOf(apartment.getRooms());
         }
-        if (apartment.getGuestList() != null) {
-            this.guestList = apartment.getGuestList().stream().map(GuestDTO::new).collect(Collectors.toList());
-        }
         if (apartment.getCleaning() != null) {
             this.cleaning = String.valueOf(apartment.getCleaning());
         }
         if (apartment.getCategory() != null) {
-            this.category = new CategoryDTO(apartment.getCategory());
+            this.categoryId = apartment.getCategory().getId();
         }
     }
 }

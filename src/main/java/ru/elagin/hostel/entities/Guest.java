@@ -1,6 +1,7 @@
 package ru.elagin.hostel.entities;
 
 import lombok.Data;
+import lombok.ToString;
 import ru.elagin.hostel.dto.GuestDTO;
 
 import javax.persistence.*;
@@ -38,12 +39,13 @@ public class Guest {
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "apartment_id")
+    @ToString.Exclude
     private Apartment apartment;
 
     public Guest() {
     }
 
-    public Guest(GuestDTO guestDTO) {
+    public Guest(GuestDTO guestDTO, Apartment apartment) {
         if (guestDTO == null) {
             throw new IllegalArgumentException("Guest dos not exist");
         }
@@ -71,9 +73,9 @@ public class Guest {
         if (guestDTO.getCheckOut() != null) {
             this.checkOut = LocalDate.parse(guestDTO.getCheckOut());
         }
-        if (guestDTO.getApartment() != null) {
-            //TODO
-            this.apartment = new Apartment(guestDTO.getApartment());
+        if(guestDTO.getApartmentId() != null) {
+            this.apartment = apartment;
         }
     }
+
 }

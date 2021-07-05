@@ -9,6 +9,9 @@ public class CategoryDTO {
     private String name;
     private String description;
 
+    public CategoryDTO() {
+    }
+
     public CategoryDTO(Category category) {
         if (category == null) {
             throw new IllegalArgumentException("Category dos not exist");

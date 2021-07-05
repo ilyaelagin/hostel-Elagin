@@ -46,4 +46,9 @@ public class ApartmentController {
     public ResponseEntity<List<Apartment>> getAllApartments() {
         return apartmentService.getAllApartments();
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Apartment> getApartmentById(@PathVariable("id") Long id) {
+        return apartmentService.getApartmentById(id);
+    }
 }

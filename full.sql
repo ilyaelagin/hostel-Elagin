@@ -20,7 +20,8 @@ CREATE TABLE apartments
     category_id LONG REFERENCES categories (id)
 );
 
-ALTER TABLE apartments ADD CONSTRAINT NUMBER_UNIQUE UNIQUE (number);
+ALTER TABLE apartments
+    ADD CONSTRAINT NUMBER_UNIQUE UNIQUE (number);
 
 INSERT INTO apartments(number, rooms, cleaning, category_id)
 VALUES (100, 1, '2021-06-29', 2),

@@ -15,7 +15,10 @@ public class GuestDTO {
     private String birth;
     private String checkIn;
     private String checkOut;
-    private ApartmentDTO apartment;
+    private Long apartmentId;
+
+    public GuestDTO() {
+    }
 
     public GuestDTO(Guest guest) {
         if (guest == null) {
@@ -46,7 +49,7 @@ public class GuestDTO {
             this.checkOut = String.valueOf(guest.getCheckOut());
         }
         if (guest.getApartment() != null) {
-            this.apartment = new ApartmentDTO(guest.getApartment());
+            this.apartmentId = guest.getApartment().getId();
         }
     }
 }

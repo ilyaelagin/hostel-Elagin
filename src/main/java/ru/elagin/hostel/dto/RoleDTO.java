@@ -8,6 +8,9 @@ public class RoleDTO {
     private String id;
     private String name;
 
+    public RoleDTO() {
+    }
+
     public RoleDTO(Role role) {
         if (role == null) {
             throw new IllegalArgumentException("Role dos not exist");

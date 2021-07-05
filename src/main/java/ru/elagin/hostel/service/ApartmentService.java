@@ -9,6 +9,7 @@ import ru.elagin.hostel.entities.Category;
 import ru.elagin.hostel.entities.Guest;
 import ru.elagin.hostel.repository.ApartmentRepository;
 import ru.elagin.hostel.repository.CategoryRepository;
+import ru.elagin.hostel.repository.GuestRepository;
 
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,9 @@ public class ApartmentService {
     private final CategoryRepository categoryRepository;
 
     public ResponseEntity<ApartmentDTO> createApartment(ApartmentDTO apartmentDTO) {
-        Apartment createdApartment = apartmentRepository.save(new Apartment(apartmentDTO));
+        Category category = categoryRepository.findById(apartmentDTO.getCategoryId()).orElse(null);
+        Apartment apartment = new Apartment(apartmentDTO, category);
+        Apartment createdApartment = apartmentRepository.save(apartment);
         if (createdApartment.getId() == null) {
             throw new IllegalArgumentException("Apartment not saved!");
         }
@@ -84,6 +87,15 @@ public class ApartmentService {
             return ResponseEntity.notFound().build();
         } else {
             return ResponseEntity.ok(apartmentList);
+        }
+    }
+
+    public ResponseEntity<Apartment> getApartmentById(Long id) {
+        Apartment foundApartment = apartmentRepository.findById(id).orElse(null);
+        if (foundApartment == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(foundApartment);
         }
     }
 }

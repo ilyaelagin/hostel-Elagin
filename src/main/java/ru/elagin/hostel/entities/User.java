@@ -1,6 +1,7 @@
 package ru.elagin.hostel.entities;
 
 import lombok.Data;
+import lombok.ToString;
 import ru.elagin.hostel.dto.UserDTO;
 
 import javax.persistence.*;
@@ -27,7 +28,7 @@ public class User {
     public User() {
     }
 
-    public User(UserDTO userDTO) {
+    public User(UserDTO userDTO, Role role) {
         if (userDTO == null) {
             throw new IllegalArgumentException("User dos not exist");
         }
@@ -40,8 +41,8 @@ public class User {
         if (userDTO.getSurname() != null) {
             this.surname = userDTO.getSurname();
         }
-        if (userDTO.getRole() != null) {
-            this.role = new Role(userDTO.getRole());
+        if (userDTO.getRoleId() != null) {
+            this.role = role;
         }
     }
 }

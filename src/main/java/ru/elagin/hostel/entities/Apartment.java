@@ -7,7 +7,6 @@ import ru.elagin.hostel.dto.ApartmentDTO;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 @Entity
@@ -24,7 +23,7 @@ public class Apartment {
     @Column
     private Integer rooms;
 
-    @OneToMany(mappedBy = "apartment")
+    @OneToMany(mappedBy = "apartment", fetch = FetchType.EAGER)
     @JsonBackReference
     private List<Guest> guestList;
 
@@ -38,7 +37,7 @@ public class Apartment {
     public Apartment() {
     }
 
-    public Apartment(ApartmentDTO apartmentDTO) {
+    public Apartment(ApartmentDTO apartmentDTO, Category category) {
         if (apartmentDTO == null) {
             throw new IllegalArgumentException("Apartment does not exist");
         }
@@ -51,14 +50,11 @@ public class Apartment {
         if (apartmentDTO.getRooms() != null) {
             this.rooms = Integer.valueOf(apartmentDTO.getRooms());
         }
-        if (apartmentDTO.getGuestList() != null) {
-            this.guestList = apartmentDTO.getGuestList().stream().map(Guest::new).collect(Collectors.toList());
-        }
         if (apartmentDTO.getCleaning() != null) {
             this.cleaning = LocalDateTime.parse(apartmentDTO.getCleaning());
         }
-        if (apartmentDTO.getCategory() != null) {
-            this.category = new Category(apartmentDTO.getCategory());
+        if (apartmentDTO.getCategoryId() != null) {
+            this.category = category;
         }
     }
 }

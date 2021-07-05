@@ -19,7 +19,9 @@ public class UserService {
     private final RoleRepository roleRepository;
 
     public ResponseEntity<UserDTO> createUser(UserDTO userDTO) {
-        User createdUser = userRepository.save(new User(userDTO));
+        Role role = roleRepository.findById(userDTO.getRoleId()).orElse(null);
+        User user = new User(userDTO, role);
+        User createdUser = userRepository.save(user);
         if (createdUser.getId() == null) {
             throw new IllegalArgumentException("User not saved!");
         }
