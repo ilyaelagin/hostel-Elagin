@@ -20,6 +20,11 @@ public class GuestService {
 
     public ResponseEntity<GuestDTO> createGuest(GuestDTO guestDTO) {
         Apartment apartment = apartmentRepository.findById(guestDTO.getApartmentId()).orElse(null);
+        Guest guestByPassport = guestRepository.findByPassport(guestDTO.getPassport());
+        if (guestByPassport != null) {
+            guestDTO.setError("The guest has not been saved! A guest with such a passport already exists in the database!");
+            return ResponseEntity.ok(guestDTO);
+        }
         Guest guest = new Guest(guestDTO, apartment);
         Guest createdGuest = guestRepository.save(guest);
         if (createdGuest.getId() == null) {

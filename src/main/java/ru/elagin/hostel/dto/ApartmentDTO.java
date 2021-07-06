@@ -10,6 +10,7 @@ public class ApartmentDTO {
     private String rooms;
     private String cleaning;
     private Long categoryId;
+    private String error;
 
     public ApartmentDTO() {
     }

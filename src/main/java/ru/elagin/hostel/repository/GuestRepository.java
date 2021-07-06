@@ -6,4 +6,5 @@ import ru.elagin.hostel.entities.Guest;
 
 @Repository
 public interface GuestRepository extends JpaRepository<Guest, Long> {
+   Guest findByPassport(String passport);
 }

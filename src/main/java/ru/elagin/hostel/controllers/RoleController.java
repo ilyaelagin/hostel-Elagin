@@ -15,17 +15,17 @@ import java.util.List;
 public class RoleController {
     private final RoleService roleService;
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<RoleDTO> createRole(@RequestBody RoleDTO roleDTO) {
         return roleService.createRole(roleDTO);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public void deleteRole(@PathVariable Long id) {
+    @DeleteMapping("/{role_id}")
+    public void deleteRole(@PathVariable("role_id") Long id) {
         roleService.deleteRole(id);
     }
 
-    @GetMapping("/all-roles")
+    @GetMapping
     public ResponseEntity<List<Role>> getAllRoles() {
         return roleService.getAllRoles();
     }

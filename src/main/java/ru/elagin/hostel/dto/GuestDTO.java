@@ -16,6 +16,7 @@ public class GuestDTO {
     private String checkIn;
     private String checkOut;
     private Long apartmentId;
+    private String error;
 
     public GuestDTO() {
     }

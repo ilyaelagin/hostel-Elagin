@@ -6,4 +6,5 @@ import ru.elagin.hostel.entities.Apartment;
 
 @Repository
 public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
+    Apartment findByNumber(Integer number);
 }

@@ -16,33 +16,33 @@ import java.util.Map;
 public class GuestController {
     private final GuestService guestService;
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<GuestDTO> createGuest(@RequestBody GuestDTO guestDTO) {
         return guestService.createGuest(guestDTO);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public void deleteGuest(@PathVariable Long id) {
+    @DeleteMapping("/{guest_id}")
+    public void deleteGuest(@PathVariable("guest_id") Long id) {
         guestService.deleteGuest(id);
     }
 
-    @PostMapping("/add-apartment")
+    @PostMapping("/apartment")
     public ResponseEntity<Guest> setGuestApartment(@RequestBody Map<String, String> map) {
         return guestService.setGuestApartment(map);
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<Guest> updateGuest(@RequestBody GuestDTO guestDTO, @PathVariable Long id) {
+    @PutMapping("/{guest_id}/edit")
+    public ResponseEntity<Guest> updateGuest(@RequestBody GuestDTO guestDTO, @PathVariable("guest_id") Long id) {
         return guestService.updateGuest(guestDTO, id);
     }
 
-    @GetMapping("/all-guests")
+    @GetMapping
     public ResponseEntity<List<Guest>> getAllGuest() {
         return guestService.getAllGuest();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Guest> getGuestById(@PathVariable("id") Long id) {
+    @GetMapping("/{guest_id}")
+    public ResponseEntity<Guest> getGuestById(@PathVariable("guest_id") Long id) {
         return guestService.getGuestById(id);
     }
 

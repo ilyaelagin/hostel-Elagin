@@ -16,22 +16,22 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
         return userService.createUser(userDTO);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public void deleteUser(@PathVariable Long id) {
+    @DeleteMapping("/{user_id}")
+    public void deleteUser(@PathVariable("user_id") Long id) {
         userService.deleteUser(id);
     }
 
-    @PostMapping("/add-role")
+    @PostMapping("/role")
     public ResponseEntity<User> setUserRole(@RequestBody Map<String, String> map) {
         return userService.setUserRole(map);
     }
 
-    @GetMapping("/all-users")
+    @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         return userService.getAllUsers();
     }

@@ -9,7 +9,6 @@ import ru.elagin.hostel.entities.Category;
 import ru.elagin.hostel.entities.Guest;
 import ru.elagin.hostel.repository.ApartmentRepository;
 import ru.elagin.hostel.repository.CategoryRepository;
-import ru.elagin.hostel.repository.GuestRepository;
 
 import java.util.List;
 import java.util.Map;
@@ -22,6 +21,11 @@ public class ApartmentService {
 
     public ResponseEntity<ApartmentDTO> createApartment(ApartmentDTO apartmentDTO) {
         Category category = categoryRepository.findById(apartmentDTO.getCategoryId()).orElse(null);
+        Apartment apartmentByNumber = apartmentRepository.findByNumber(Integer.valueOf(apartmentDTO.getNumber()));
+        if (apartmentByNumber != null) {
+            apartmentDTO.setError("The apartment has not been saved. An apartment with this number already exists in the database!");
+            return ResponseEntity.ok(apartmentDTO);
+        }
         Apartment apartment = new Apartment(apartmentDTO, category);
         Apartment createdApartment = apartmentRepository.save(apartment);
         if (createdApartment.getId() == null) {

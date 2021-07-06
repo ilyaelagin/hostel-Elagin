@@ -15,17 +15,17 @@ import java.util.List;
 public class CategoryController {
     private final CategoryService categoryService;
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO categoryDTO) {
         return categoryService.createCategory(categoryDTO);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public void deleteCategory(@PathVariable Long id) {
+    @DeleteMapping("/{category_id}")
+    public void deleteCategory(@PathVariable("category_id") Long id) {
         categoryService.deleteCategory(id);
     }
 
-    @GetMapping("/all-categories")
+    @GetMapping
     public ResponseEntity<List<Category>> getAllCategories() {
         return categoryService.getAllCategories();
     }
