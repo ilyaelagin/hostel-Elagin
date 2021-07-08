@@ -1,7 +1,6 @@
 package ru.elagin.hostel.entities;
 
 import lombok.Data;
-import lombok.ToString;
 import ru.elagin.hostel.dto.UserDTO;
 
 import javax.persistence.*;
@@ -21,9 +20,18 @@ public class User {
     @Column(nullable = false)
     private String surname;
 
+    @Column(nullable = false)
+    private String login;
+
+    @Column(nullable = false)
+    private String password;
+
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
+
+    @Column(nullable = false)
+    private String status;
 
     public User() {
     }

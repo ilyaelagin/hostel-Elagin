@@ -105,4 +105,17 @@ public class GuestService {
             return ResponseEntity.ok(foundGuest);
         }
     }
+
+    public ResponseEntity<Integer> getRoomsApartment(Long id) {
+        Guest foundGuest = guestRepository.findById(id).orElse(null);
+        if (foundGuest == null) {
+            return ResponseEntity.notFound().build();
+        }
+        Integer rooms = foundGuest.getApartment().getRooms();
+        if (rooms == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(rooms);
+        }
+    }
 }

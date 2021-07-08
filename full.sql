@@ -52,18 +52,21 @@ CREATE TABLE roles
 );
 
 INSERT INTO ROLES (name)
-VALUES ('administrator'),
+VALUES ('admin'),
        ('dispatcher');
 
 
 CREATE TABLE users
 (
-    id      LONG IDENTITY PRIMARY KEY,
-    name    VARCHAR2(20) NOT NULL,
-    surname VARCHAR2(50) NOT NULL,
-    role_id LONG         NOT NULL REFERENCES roles (id)
+    id       LONG IDENTITY PRIMARY KEY,
+    name     VARCHAR2(20)  NOT NULL,
+    surname  VARCHAR2(50)  NOT NULL,
+    login    VARCHAR2(50)  NOT NULL,
+    password VARCHAR2(255) NOT NULL,
+    role_id  LONG          NOT NULL REFERENCES roles (id),
+    status   VARCHAR2(20)  NOT NULL DEFAULT 'active'
 );
 
-INSERT INTO users(name, surname, role_id)
-VALUES ('Alex', 'Petrov', 1),
-       ('Elena', 'Ivanova', 2);
+INSERT INTO users(name, surname, login, password, role_id)
+VALUES ('Alex', 'Petrov', 'apetrov', '$2y$12$6xPVMOWSajJly0QzC2fane/hP78iCWvtDcvdcd0rqSIcQw1ceDFum', 1),
+       ('Elena', 'Ivanova', 'eivanova', '$2y$12$c7yLs0GnV1WeWf5ZK3.xrubAXf7NnteEgcA7yW0DiydyzAM5C8tXG', 2);

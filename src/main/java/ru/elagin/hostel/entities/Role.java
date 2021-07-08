@@ -1,6 +1,7 @@
 package ru.elagin.hostel.entities;
 
 import lombok.Data;
+import org.springframework.security.core.GrantedAuthority;
 import ru.elagin.hostel.dto.RoleDTO;
 
 import javax.persistence.*;
@@ -8,7 +9,7 @@ import javax.persistence.*;
 @Data
 @Entity
 @Table(name = "roles", schema = "hostel")
-public class Role {
+public class Role implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
@@ -30,5 +31,10 @@ public class Role {
         if (roleDTO.getName() != null) {
             this.name = roleDTO.getName();
         }
+    }
+
+    @Override
+    public String getAuthority() {
+        return name;
     }
 }

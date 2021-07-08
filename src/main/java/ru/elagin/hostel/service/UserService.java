@@ -11,6 +11,7 @@ import ru.elagin.hostel.repository.UserRepository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -64,5 +65,9 @@ public class UserService {
         } else {
             return ResponseEntity.ok(userList);
         }
+    }
+
+    public Optional<User> getUserByLogin(String login) {
+        return userRepository.findByLogin(login);
     }
 }
