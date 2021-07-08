@@ -8,7 +8,10 @@ public class UserDTO {
     private String id;
     private String name;
     private String surname;
+    private String login;
+    private String password;
     private Long roleId;
+    private String status;
 
     public UserDTO() {
     }
@@ -26,8 +29,17 @@ public class UserDTO {
         if (user.getSurname() != null) {
             this.surname = user.getSurname();
         }
+        if (user.getLogin() != null) {
+            this.login = user.getLogin();
+        }
+        if (user.getPassword() != null) {
+            this.password = user.getPassword();
+        }
         if (user.getRole() != null) {
             this.roleId = user.getRole().getId();
+        }
+        if (user.getStatus() != null) {
+            this.status = user.getStatus();
         }
     }
 }

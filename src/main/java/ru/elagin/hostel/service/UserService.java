@@ -11,7 +11,6 @@ import ru.elagin.hostel.repository.UserRepository;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -67,7 +66,22 @@ public class UserService {
         }
     }
 
-    public Optional<User> getUserByLogin(String login) {
-        return userRepository.findByLogin(login);
+    public ResponseEntity<String> setUserStatus(Map<String, String> userIdStatus) {
+        if (!userIdStatus.get("userId").matches("\\d+")) {
+            throw new NumberFormatException("User id must be numeric!");
+        }
+        Long userId = Long.valueOf(userIdStatus.get("userId"));
+        String status = userIdStatus.get("status");
+        if ((!"active".equals(status)) && (!"banned".equals(status))) {
+            throw new IllegalArgumentException("The status must be: active or banned");
+        }
+        User userToUpdate = userRepository.findById(userId).orElse(null);
+        if (userToUpdate == null) {
+            throw new IllegalArgumentException("The user does not exist!");
+        }
+        userToUpdate.setStatus(status);
+        userRepository.save(userToUpdate);
+
+        return ResponseEntity.ok(status);
     }
 }

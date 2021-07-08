@@ -42,12 +42,12 @@ public class GuestService {
 
     public ResponseEntity<Guest> setGuestApartment(Map<String, String> guestIdApartmentId) {
         if (!guestIdApartmentId.get("guestId").matches("\\d+")) {
-            throw new NumberFormatException("Guest id must be numeric!");
+            throw new IllegalArgumentException("Guest id must be numeric!");
         }
         Long guestId = Long.valueOf(guestIdApartmentId.get("guestId"));
 
         if (!guestIdApartmentId.get("apartmentId").matches("\\d+")) {
-            throw new NumberFormatException("Apartment id must be numeric!");
+            throw new IllegalArgumentException("Apartment id must be numeric!");
         }
         Long apartmentId = Long.valueOf(guestIdApartmentId.get("apartmentId"));
 
@@ -74,7 +74,6 @@ public class GuestService {
             return ResponseEntity.notFound().build();
         }
         Apartment apartment = apartmentRepository.getById(guestDTO.getApartmentId());
-        //TODO refactor...
         Guest convertedGuest = new Guest(guestDTO, apartment);
         guestToUpdate.setName(convertedGuest.getName());
         guestToUpdate.setSurname(convertedGuest.getSurname());

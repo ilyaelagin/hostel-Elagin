@@ -14,30 +14,32 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
+@PreAuthorize("hasRole('admin')")
 public class UserController {
     private final UserService userService;
 
     @PostMapping
-    @PreAuthorize("hasRole('admin')")
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
         return userService.createUser(userDTO);
     }
 
     @DeleteMapping("/{user_id}")
-    @PreAuthorize("hasRole('admin')")
     public void deleteUser(@PathVariable("user_id") Long id) {
         userService.deleteUser(id);
     }
 
     @PostMapping("/role")
-    @PreAuthorize("hasRole('admin')")
     public ResponseEntity<User> setUserRole(@RequestBody Map<String, String> map) {
         return userService.setUserRole(map);
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('admin')")
     public ResponseEntity<List<User>> getAllUsers() {
         return userService.getAllUsers();
+    }
+
+    @PostMapping("/status")
+    public ResponseEntity<String> setUserStatus(@RequestBody Map<String, String> map) {
+        return userService.setUserStatus(map);
     }
 }

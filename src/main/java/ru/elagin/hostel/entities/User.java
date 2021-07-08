@@ -30,7 +30,6 @@ public class User {
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
-    @Column(nullable = false)
     private String status;
 
     public User() {
@@ -49,8 +48,17 @@ public class User {
         if (userDTO.getSurname() != null) {
             this.surname = userDTO.getSurname();
         }
+        if (userDTO.getLogin() != null) {
+            this.login = userDTO.getLogin();
+        }
+        if (userDTO.getPassword() != null) {
+            this.password = userDTO.getPassword();
+        }
         if (userDTO.getRoleId() != null) {
             this.role = role;
+        }
+        if (userDTO.getStatus() != null) {
+            this.status = userDTO.getStatus();
         }
     }
 }

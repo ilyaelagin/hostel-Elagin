@@ -13,23 +13,21 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/roles")
+@PreAuthorize("hasRole('admin')")
 public class RoleController {
     private final RoleService roleService;
 
     @PostMapping
-    @PreAuthorize("hasRole('admin')")
     public ResponseEntity<RoleDTO> createRole(@RequestBody RoleDTO roleDTO) {
         return roleService.createRole(roleDTO);
     }
 
     @DeleteMapping("/{role_id}")
-    @PreAuthorize("hasRole('admin')")
     public void deleteRole(@PathVariable("role_id") Long id) {
         roleService.deleteRole(id);
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('admin')")
     public ResponseEntity<List<Role>> getAllRoles() {
         return roleService.getAllRoles();
     }

@@ -70,3 +70,16 @@ CREATE TABLE users
 INSERT INTO users(name, surname, login, password, role_id)
 VALUES ('Alex', 'Petrov', 'apetrov', '$2y$12$6xPVMOWSajJly0QzC2fane/hP78iCWvtDcvdcd0rqSIcQw1ceDFum', 1),
        ('Elena', 'Ivanova', 'eivanova', '$2y$12$c7yLs0GnV1WeWf5ZK3.xrubAXf7NnteEgcA7yW0DiydyzAM5C8tXG', 2);
+
+INSERT INTO users(name, surname, login, password, role_id, status)
+VALUES ('Aaa', 'Bb', 'ab', '$2y$12$xkTHKJSsodIxp7Mnxul5te2Bd.Q8LZFnDno5UKlrAhqnp76NNOoZe', 2, '');
+
+CREATE TABLE status
+(
+    id     LONG PRIMARY KEY,
+    status VARCHAR2(20) NOT NULL UNIQUE
+);
+
+INSERT INTO status(id, status)
+VALUES (0, 'banned'),
+       (1, 'active');
