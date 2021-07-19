@@ -4,7 +4,7 @@ CREATE TABLE categories
 (
     id          LONG IDENTITY PRIMARY KEY,
     name        VARCHAR2(20) NOT NULL,
-    description TEXT
+    description VARCHAR2(255)
 );
 
 INSERT INTO categories(name, description)
@@ -20,8 +20,6 @@ CREATE TABLE apartments
     category_id LONG REFERENCES categories (id)
 );
 
-ALTER TABLE apartments
-    ADD CONSTRAINT NUMBER_UNIQUE UNIQUE (number);
 
 INSERT INTO apartments(number, rooms, cleaning, category_id)
 VALUES (100, 1, '2021-06-29', 2),
@@ -41,8 +39,8 @@ CREATE TABLE guests
 );
 
 INSERT INTO guests(name, surname, passport, foto, birth, check_in, check_out, apartment_id)
-VALUES ('Max', 'Maxov', '1235 125469', 12, '2000-12-12', '2021-06-30', '2021-07-20', 5),
-       ('Ivan', 'Ivanov', '3696 456582', 555, '1980-01-02', '2021-06-24', '2021-06-30', 6);
+VALUES ('Max', 'Maxov', '1235 125469', 12, '2000-12-12', '2021-06-30', '2021-07-20', 1),
+       ('Ivan', 'Ivanov', '3696 456582', 555, '1980-01-02', '2021-06-24', '2021-06-30', 2);
 
 
 CREATE TABLE roles
@@ -61,25 +59,26 @@ CREATE TABLE users
     id       LONG IDENTITY PRIMARY KEY,
     name     VARCHAR2(20)  NOT NULL,
     surname  VARCHAR2(50)  NOT NULL,
-    login    VARCHAR2(50)  NOT NULL,
+    login    VARCHAR2(50)  NOT NULL UNIQUE ,
     password VARCHAR2(255) NOT NULL,
-    role_id  LONG          NOT NULL REFERENCES roles (id),
+--     role_id  LONG          NOT NULL REFERENCES roles (id),
     status   VARCHAR2(20)  NOT NULL DEFAULT 'active'
 );
 
-INSERT INTO users(name, surname, login, password, role_id)
-VALUES ('Alex', 'Petrov', 'apetrov', '$2y$12$6xPVMOWSajJly0QzC2fane/hP78iCWvtDcvdcd0rqSIcQw1ceDFum', 1),
-       ('Elena', 'Ivanova', 'eivanova', '$2y$12$c7yLs0GnV1WeWf5ZK3.xrubAXf7NnteEgcA7yW0DiydyzAM5C8tXG', 2);
+INSERT INTO users(name, surname, login, password)
+VALUES ('Alex', 'Petrov', 'apetrov', '$2y$12$6xPVMOWSajJly0QzC2fane/hP78iCWvtDcvdcd0rqSIcQw1ceDFum'),
+       ('Elena', 'Ivanova', 'eivanova', '$2y$12$c7yLs0GnV1WeWf5ZK3.xrubAXf7NnteEgcA7yW0DiydyzAM5C8tXG');
 
-INSERT INTO users(name, surname, login, password, role_id, status)
-VALUES ('Aaa', 'Bb', 'ab', '$2y$12$xkTHKJSsodIxp7Mnxul5te2Bd.Q8LZFnDno5UKlrAhqnp76NNOoZe', 2, '');
+-- INSERT INTO users(name, surname, login, password, role_id, status)
+-- VALUES ('Aaa', 'Bb', 'ab', '$2y$12$xkTHKJSsodIxp7Mnxul5te2Bd.Q8LZFnDno5UKlrAhqnp76NNOoZe', 2, '');
 
-CREATE TABLE status
+CREATE TABLE users_roles
 (
-    id     LONG PRIMARY KEY,
-    status VARCHAR2(20) NOT NULL UNIQUE
+    user_id  LONG NOT NULL REFERENCES users (id),
+    roles_id LONG NOT NULL REFERENCES roles (id),
+    PRIMARY KEY (user_id, roles_id)
 );
 
-INSERT INTO status(id, status)
-VALUES (0, 'banned'),
-       (1, 'active');
+INSERT INTO users_roles(user_id, roles_id)
+VALUES (1, 1),
+       (2, 2);

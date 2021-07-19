@@ -14,7 +14,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
-@PreAuthorize("hasRole('admin')")
+//@PreAuthorize("hasRole('admin')")
 public class UserController {
     private final UserService userService;
 
@@ -31,6 +31,11 @@ public class UserController {
     @PostMapping("/role")
     public ResponseEntity<User> setUserRole(@RequestBody Map<String, String> map) {
         return userService.setUserRole(map);
+    }
+
+    @DeleteMapping("/role")
+    public ResponseEntity<User> deleteUserRole(@RequestBody Map<String, String> map) {
+        return userService.deleteUserRole(map);
     }
 
     @GetMapping

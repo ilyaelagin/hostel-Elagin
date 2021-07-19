@@ -4,6 +4,8 @@ import lombok.Data;
 import ru.elagin.hostel.dto.UserDTO;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Entity
@@ -26,16 +28,20 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "role_id", nullable = false)
-    private Role role;
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "roles_id")
+    )
+    private Set<Role> roles = new HashSet<>();
 
     private String status;
 
     public User() {
     }
 
-    public User(UserDTO userDTO, Role role) {
+    public User(UserDTO userDTO, Set<Role> roles) {
         if (userDTO == null) {
             throw new IllegalArgumentException("User dos not exist");
         }
@@ -54,8 +60,8 @@ public class User {
         if (userDTO.getPassword() != null) {
             this.password = userDTO.getPassword();
         }
-        if (userDTO.getRoleId() != null) {
-            this.role = role;
+        if (userDTO.getRolesId() != null) {
+            this.roles.addAll(roles);
         }
         if (userDTO.getStatus() != null) {
             this.status = userDTO.getStatus();

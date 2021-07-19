@@ -19,20 +19,22 @@ public class GuestService {
     private final ApartmentRepository apartmentRepository;
 
     public ResponseEntity<GuestDTO> createGuest(GuestDTO guestDTO) {
-        Apartment apartment = apartmentRepository.findById(guestDTO.getApartmentId()).orElse(null);
-        Guest guestByPassport = guestRepository.findByPassport(guestDTO.getPassport());
+        Guest guestByPassport = guestRepository.findByPassport(guestDTO.getPassport()).orElse(null);
         if (guestByPassport != null) {
             guestDTO.setError("The guest has not been saved! A guest with such a passport already exists in the database!");
             return ResponseEntity.ok(guestDTO);
+        }
+        Apartment apartment = apartmentRepository.findById(guestDTO.getApartmentId()).orElse(null);
+        if (apartment == null) {
+            throw new IllegalArgumentException("The apartment does not exist!");
         }
         Guest guest = new Guest(guestDTO, apartment);
         Guest createdGuest = guestRepository.save(guest);
         if (createdGuest.getId() == null) {
             throw new IllegalArgumentException("Guest not saved!");
         }
-        if (apartment != null) {
-            apartment.getGuestList().add(createdGuest);
-        }
+        apartment.getGuestList().add(createdGuest);
+
         return ResponseEntity.ok(new GuestDTO(createdGuest));
     }
 

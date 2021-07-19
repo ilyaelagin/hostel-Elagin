@@ -3,6 +3,10 @@ package ru.elagin.hostel.dto;
 import lombok.Data;
 import ru.elagin.hostel.entities.User;
 
+import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
 @Data
 public class UserDTO {
     private String id;
@@ -10,8 +14,9 @@ public class UserDTO {
     private String surname;
     private String login;
     private String password;
-    private Long roleId;
+    private Set<String> rolesId;
     private String status;
+    private String error;
 
     public UserDTO() {
     }
@@ -35,8 +40,8 @@ public class UserDTO {
         if (user.getPassword() != null) {
             this.password = user.getPassword();
         }
-        if (user.getRole() != null) {
-            this.roleId = user.getRole().getId();
+        if (user.getRoles() != null) {
+            this.rolesId = user.getRoles().stream().map(role -> String.valueOf(role.getId())).collect(Collectors.toSet());
         }
         if (user.getStatus() != null) {
             this.status = user.getStatus();
