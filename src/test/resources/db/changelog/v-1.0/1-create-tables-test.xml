@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd">
+
+    <changeSet id="2" author="elagin">
+
+        <createTable tableName="categories">
+            <column name="id" type="LONG" autoIncrement="true">
+                <constraints primaryKeyName="categories_pk" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR2(20)"/>
+            <column name="description" type="VARCHAR2(255)"/>
+        </createTable>
+
+        <createTable tableName="apartments">
+            <column name="id" type="LONG" autoIncrement="true">
+                <constraints primaryKeyName="apartments_pk" primaryKey="true"/>
+            </column>
+            <column name="number" type="INTEGER">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="rooms" type="INTEGER"/>
+            <column name="cleaning" type="TIMESTAMP"/>
+            <column name="category_id" type="LONG">
+                <constraints foreignKeyName="apartments_fk" referencedTableName="categories"
+                             referencedColumnNames="id"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="guests">
+            <column name="id" type="LONG" autoIncrement="true">
+                <constraints primaryKeyName="guests_pk" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR2(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="surname" type="VARCHAR2(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="passport" type="VARCHAR2(50)">
+                <constraints unique="true"/>
+            </column>
+            <column name="foto" type="BYTEA"/>
+            <column name="birth" type="DATE"/>
+            <column name="check_in" type="DATE"/>
+            <column name="check_out" type="DATE"/>
+            <column name="apartment_id" type="LONG">
+                <constraints foreignKeyName="guests_fk" referencedTableName="apartments" referencedColumnNames="id"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="roles">
+            <column name="id" type="LONG" autoIncrement="true">
+                <constraints primaryKeyName="roles_pk" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="users">
+            <column name="id" type="LONG" autoIncrement="true">
+                <constraints primaryKeyName="users_pk" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="surname" type="VARCHAR2(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="login" type="VARCHAR2(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR2(20)" defaultValue="active">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="users_roles">
+            <column name="user_id" type="LONG">
+                <constraints foreignKeyName="user_id_fk" referencedTableName="users" referencedColumnNames="id"
+                             nullable="false"/>
+            </column>
+            <column name="role_id" type="LONG">
+                <constraints foreignKeyName="role_id_fk" referencedTableName="roles" referencedColumnNames="id"
+                             nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="users_roles" columnNames="user_id, role_id" constraintName="users_roles_pk"/>
+
+        <rollback>
+            <dropTable tableName="users_roles"/>
+            <dropTable tableName="users"/>
+            <dropTable tableName="roles"/>
+            <dropTable tableName="guests"/>
+            <dropTable tableName="apartments"/>
+            <dropTable tableName="categories"/>
+        </rollback>
+
+    </changeSet>
+</databaseChangeLog>

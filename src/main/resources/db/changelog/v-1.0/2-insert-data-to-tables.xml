@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd">
+
+    <changeSet id="3" author="elagin">
+        <insert tableName="categories">
+            <column name="name" value="duplex"/>
+            <column name="description" value="sea view"/>
+        </insert>
+        <insert tableName="categories">
+            <column name="name" value="standard"/>
+            <column name="description" value="garden view"/>
+        </insert>
+
+        <insert tableName="apartments">
+            <column name="number" value="100"/>
+            <column name="rooms" value="1"/>
+            <column name="cleaning" value="2021-06-29"/>
+            <column name="category_id" value="2"/>
+        </insert>
+        <insert tableName="apartments">
+            <column name="number" value="101"/>
+            <column name="rooms" value="2"/>
+            <column name="cleaning" value="2021-06-25"/>
+            <column name="category_id" value="1"/>
+        </insert>
+
+        <insert tableName="guests">
+            <column name="name" value="Max"/>
+            <column name="surname" value="Maxov"/>
+            <column name="passport" value="1234 987511"/>
+            <column name="foto" value="1111"/>
+            <column name="birth" value="2000-12-12"/>
+            <column name="check_in" value="2021-06-30"/>
+            <column name="check_out" value="2021-07-09"/>
+            <column name="apartment_id" value="1"/>
+        </insert>
+        <insert tableName="guests">
+            <column name="name" value="Ivan"/>
+            <column name="surname" value="Ivanov"/>
+            <column name="passport" value="9898 020304"/>
+            <column name="foto" value="2222"/>
+            <column name="birth" value="1993-09-29"/>
+            <column name="check_in" value="2021-07-26"/>
+            <column name="check_out" value="2021-08-15"/>
+            <column name="apartment_id" value="2"/>
+        </insert>
+        
+        <insert tableName="roles">
+            <column name="name" value="admin"/>
+        </insert>
+        <insert tableName="roles">
+            <column name="name" value="dispatcher"/>
+        </insert>
+        
+        <insert tableName="users">
+            <column name="name" value="Alex"/>
+            <column name="surname" value="Petrov"/>
+            <column name="login" value="apetrov"/>
+            <column name="password" value="$2y$12$6xPVMOWSajJly0QzC2fane/hP78iCWvtDcvdcd0rqSIcQw1ceDFum"/>
+        </insert>
+        <insert tableName="users">
+            <column name="name" value="Elena"/>
+            <column name="surname" value="Ivanova"/>
+            <column name="login" value="eivanova"/>
+            <column name="password" value="$2y$12$c7yLs0GnV1WeWf5ZK3.xrubAXf7NnteEgcA7yW0DiydyzAM5C8tXG"/>
+        </insert>
+
+        <insert tableName="users_roles">
+            <column name="user_id" value="1"/>
+            <column name="role_id" value="1"/>
+        </insert>
+        <insert tableName="users_roles">
+            <column name="user_id" value="2"/>
+            <column name="role_id" value="2"/>
+        </insert>
+
+        <rollback>
+            <delete tableName="users_roles"/>
+            <delete tableName="users"/>
+            <delete tableName="roles"/>
+            <delete tableName="guests"/>
+            <delete tableName="apartments"/>
+            <delete tableName="categories"/>
+        </rollback>
+
+    </changeSet>
+</databaseChangeLog>

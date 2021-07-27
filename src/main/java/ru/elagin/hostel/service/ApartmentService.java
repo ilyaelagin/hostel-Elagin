@@ -12,6 +12,7 @@ import ru.elagin.hostel.repository.CategoryRepository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -21,9 +22,13 @@ public class ApartmentService {
 
     public ResponseEntity<ApartmentDTO> createApartment(ApartmentDTO apartmentDTO) {
         Category category = categoryRepository.findById(apartmentDTO.getCategoryId()).orElse(null);
+        if (category == null) {
+            apartmentDTO.setError("The apartment has not been saved! The category does not exist!");
+            return ResponseEntity.ok(apartmentDTO);
+        }
         Apartment apartmentByNumber = apartmentRepository.findByNumber(Integer.valueOf(apartmentDTO.getNumber()));
         if (apartmentByNumber != null) {
-            apartmentDTO.setError("The apartment has not been saved. An apartment with this number already exists in the database!");
+            apartmentDTO.setError("The apartment has not been saved! An apartment with this number already exists in the database!");
             return ResponseEntity.ok(apartmentDTO);
         }
         Apartment apartment = new Apartment(apartmentDTO, category);
@@ -63,16 +68,16 @@ public class ApartmentService {
         return ResponseEntity.ok(apartmentToUpdate);
     }
 
-    public ResponseEntity<List<Guest>> getGuestList(Long id) {
+    public ResponseEntity<Set<Guest>> getGuestSet(Long id) {
         Apartment apartment = apartmentRepository.findById(id).orElse(null);
         if (apartment == null) {
             throw new IllegalArgumentException("The apartment does not exist!");
         }
-        List<Guest> guestList = apartment.getGuestList();
-        if (guestList.isEmpty()) {
+        Set<Guest> guestSet = apartment.getGuestSet();
+        if (guestSet.isEmpty()) {
             return ResponseEntity.notFound().build();
         } else {
-            return ResponseEntity.ok(guestList);
+            return ResponseEntity.ok(guestSet);
         }
     }
 

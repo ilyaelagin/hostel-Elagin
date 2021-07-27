@@ -11,6 +11,7 @@ import ru.elagin.hostel.service.ApartmentService;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,8 +39,8 @@ public class ApartmentController {
 
     @GetMapping("/{apartment_id}/guest-list")
     @PreAuthorize("hasAnyRole('admin', 'dispatcher')")
-    public ResponseEntity<List<Guest>> getGuestList(@PathVariable("apartment_id") Long id) {
-        return apartmentService.getGuestList(id);
+    public ResponseEntity<Set<Guest>> getGuestSet(@PathVariable("apartment_id") Long id) {
+        return apartmentService.getGuestSet(id);
     }
 
     @GetMapping("/{apartment_id}/rooms")

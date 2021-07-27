@@ -1,6 +1,7 @@
 package ru.elagin.hostel.entities;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import ru.elagin.hostel.dto.GuestDTO;
 
@@ -9,7 +10,7 @@ import java.time.LocalDate;
 
 @Data
 @Entity
-@Table(name = "guests", schema = "hostel")
+@Table(name = "guests", schema = "HOSTEL")
 public class Guest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,9 +38,8 @@ public class Guest {
     @Column(name = "check_out")
     private LocalDate checkOut;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "apartment_id")
-    @ToString.Exclude
     private Apartment apartment;
 
     public Guest() {

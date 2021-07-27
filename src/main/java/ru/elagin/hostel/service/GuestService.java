@@ -11,6 +11,7 @@ import ru.elagin.hostel.repository.GuestRepository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -26,14 +27,15 @@ public class GuestService {
         }
         Apartment apartment = apartmentRepository.findById(guestDTO.getApartmentId()).orElse(null);
         if (apartment == null) {
-            throw new IllegalArgumentException("The apartment does not exist!");
+            guestDTO.setError("The guest has not been saved! The apartment does not exist!");
+            return ResponseEntity.ok(guestDTO);
         }
         Guest guest = new Guest(guestDTO, apartment);
         Guest createdGuest = guestRepository.save(guest);
         if (createdGuest.getId() == null) {
             throw new IllegalArgumentException("Guest not saved!");
         }
-        apartment.getGuestList().add(createdGuest);
+        apartment.getGuestSet().add(createdGuest);
 
         return ResponseEntity.ok(new GuestDTO(createdGuest));
     }
@@ -62,9 +64,7 @@ public class GuestService {
             throw new IllegalArgumentException("The apartment does not exist!");
         }
         guestToUpdate.setApartment(apartment);
-        List<Guest> guestList = apartment.getGuestList();
-        guestList.add(guestToUpdate);
-        apartment.setGuestList(guestList);
+        apartment.getGuestSet().add(guestToUpdate);
         guestRepository.save(guestToUpdate);
 
         return ResponseEntity.ok(guestToUpdate);

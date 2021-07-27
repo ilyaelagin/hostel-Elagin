@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd">
+
+    <changeSet id="3" author="elagin">
+
+        <insert tableName="categories">
+            <column name="name" value="duplex"/>
+            <column name="description" value="sea view"/>
+        </insert>
+        <insert tableName="categories">
+            <column name="name" value="standard"/>
+            <column name="description" value="garden view"/>
+        </insert>
+
+        <insert tableName="apartments">
+            <column name="number" value="100"/>
+            <column name="rooms" value="1"/>
+            <column name="cleaning" value="2021-06-29"/>
+            <column name="category_id" value="2"/>
+        </insert>
+        <insert tableName="apartments">
+            <column name="number" value="101"/>
+            <column name="rooms" value="2"/>
+            <column name="cleaning" value="2021-06-25"/>
+            <column name="category_id" value="1"/>
+        </insert>
+
+        <rollback>
+            <delete tableName="categories"/>
+        </rollback>
+
+    </changeSet>
+</databaseChangeLog>

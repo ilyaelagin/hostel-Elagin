@@ -1,16 +1,19 @@
 package ru.elagin.hostel.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import ru.elagin.hostel.dto.ApartmentDTO;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "apartments", schema = "hostel")
+@Table(name = "apartments", schema = "HOSTEL")
+@JsonIgnoreProperties("hibernateLazyInitializer")
 public class Apartment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +28,8 @@ public class Apartment {
 
     @OneToMany(mappedBy = "apartment", fetch = FetchType.EAGER)
     @JsonBackReference
-    private List<Guest> guestList;
+    @EqualsAndHashCode.Exclude
+    private Set<Guest> guestSet;
 
     @Column
     private LocalDateTime cleaning;
