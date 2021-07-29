@@ -6,12 +6,13 @@ import org.springframework.stereotype.Service;
 import ru.elagin.hostel.dto.GuestDTO;
 import ru.elagin.hostel.entities.Apartment;
 import ru.elagin.hostel.entities.Guest;
+import ru.elagin.hostel.exception.RepositoryException;
 import ru.elagin.hostel.repository.ApartmentRepository;
 import ru.elagin.hostel.repository.GuestRepository;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,21 +21,19 @@ public class GuestService {
     private final ApartmentRepository apartmentRepository;
 
     public ResponseEntity<GuestDTO> createGuest(GuestDTO guestDTO) {
-        Guest guestByPassport = guestRepository.findByPassport(guestDTO.getPassport()).orElse(null);
-        if (guestByPassport != null) {
+        Optional<Guest> guestByPassport = guestRepository.findByPassport(guestDTO.getPassport());
+        if (guestByPassport.isPresent()) {
             guestDTO.setError("The guest has not been saved! A guest with such a passport already exists in the database!");
             return ResponseEntity.ok(guestDTO);
         }
-        Apartment apartment = apartmentRepository.findById(guestDTO.getApartmentId()).orElse(null);
-        if (apartment == null) {
+        Optional<Apartment> apartmentById = apartmentRepository.findById(guestDTO.getApartmentId());
+        if (apartmentById.isEmpty()) {
             guestDTO.setError("The guest has not been saved! The apartment does not exist!");
             return ResponseEntity.ok(guestDTO);
         }
+        Apartment apartment = apartmentById.get();
         Guest guest = new Guest(guestDTO, apartment);
-        Guest createdGuest = guestRepository.save(guest);
-        if (createdGuest.getId() == null) {
-            throw new IllegalArgumentException("Guest not saved!");
-        }
+        Guest createdGuest = Optional.of(guestRepository.save(guest)).orElseThrow(() -> new RepositoryException("Guest not saved!"));
         apartment.getGuestSet().add(createdGuest);
 
         return ResponseEntity.ok(new GuestDTO(createdGuest));
@@ -55,14 +54,8 @@ public class GuestService {
         }
         Long apartmentId = Long.valueOf(guestIdApartmentId.get("apartmentId"));
 
-        Guest guestToUpdate = guestRepository.findById(guestId).orElse(null);
-        if (guestToUpdate == null) {
-            throw new IllegalArgumentException("The guest does not exist!");
-        }
-        Apartment apartment = apartmentRepository.findById(apartmentId).orElse(null);
-        if (apartment == null) {
-            throw new IllegalArgumentException("The apartment does not exist!");
-        }
+        Guest guestToUpdate = guestRepository.findById(guestId).orElseThrow(() -> new RepositoryException("The guest does not exist!"));
+        Apartment apartment = apartmentRepository.findById(apartmentId).orElseThrow(() -> new RepositoryException("The apartment does not exist!"));
         guestToUpdate.setApartment(apartment);
         apartment.getGuestSet().add(guestToUpdate);
         guestRepository.save(guestToUpdate);
@@ -71,10 +64,11 @@ public class GuestService {
     }
 
     public ResponseEntity<Guest> updateGuest(GuestDTO guestDTO, Long id) {
-        Guest guestToUpdate = guestRepository.findById(id).orElse(null);
-        if (guestToUpdate == null) {
+        Optional<Guest> guestById = guestRepository.findById(id);
+        if (guestById.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+        Guest guestToUpdate = guestById.get();
         Apartment apartment = apartmentRepository.getById(guestDTO.getApartmentId());
         Guest convertedGuest = new Guest(guestDTO, apartment);
         guestToUpdate.setName(convertedGuest.getName());
@@ -99,24 +93,24 @@ public class GuestService {
     }
 
     public ResponseEntity<Guest> getGuestById(Long id) {
-        Guest foundGuest = guestRepository.findById(id).orElse(null);
-        if (foundGuest == null) {
+        Optional<Guest> guestById = guestRepository.findById(id);
+        if (guestById.isEmpty()) {
             return ResponseEntity.notFound().build();
         } else {
-            return ResponseEntity.ok(foundGuest);
+            return ResponseEntity.ok(guestById.get());
         }
     }
 
     public ResponseEntity<Integer> getRoomsApartment(Long id) {
-        Guest foundGuest = guestRepository.findById(id).orElse(null);
-        if (foundGuest == null) {
+        Optional<Guest> guestById = guestRepository.findById(id);
+        if (guestById.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        Integer rooms = foundGuest.getApartment().getRooms();
-        if (rooms == null) {
+        Optional<Integer> rooms = Optional.ofNullable(guestById.get().getApartment().getRooms());
+        if (rooms.isEmpty()) {
             return ResponseEntity.notFound().build();
         } else {
-            return ResponseEntity.ok(rooms);
+            return ResponseEntity.ok(rooms.get());
         }
     }
 }

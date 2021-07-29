@@ -13,7 +13,8 @@
         <tagDatabase tag="db_init"/>
     </changeSet>
 
-    <include file="classpath:db/changelog/v-1.0/changelog-v.1.0.xml"/>
+    <include file="classpath:db/changelog/v-1.0/1-create-tables.xml"/>
+    <include file="classpath:db/changelog/v-1.0/2-insert-data-to-tables.xml"/>
 
     <changeSet id="4" author="elagin">
         <tagDatabase tag="v.1.0"/>

@@ -1,6 +1,7 @@
 package ru.elagin.hostel.entities;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.elagin.hostel.dto.UserDTO;
 
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Data
+@NoArgsConstructor
 @Entity
 @Table(name = "users", schema = "HOSTEL")
 public class User {
@@ -36,10 +38,8 @@ public class User {
     )
     private Set<Role> roles = new HashSet<>();
 
+    @Column(nullable = false)
     private String status;
-
-    public User() {
-    }
 
     public User(UserDTO userDTO, Set<Role> roles) {
         if (userDTO == null) {

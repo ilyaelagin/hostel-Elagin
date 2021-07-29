@@ -1,11 +1,13 @@
 package ru.elagin.hostel.entities;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.elagin.hostel.dto.CategoryDTO;
 
 import javax.persistence.*;
 
 @Data
+@NoArgsConstructor
 @Entity
 @Table(name = "categories", schema = "HOSTEL")
 public class Category {
@@ -19,9 +21,6 @@ public class Category {
 
     @Column
     private String description;
-
-    public Category() {
-    }
 
     public Category(CategoryDTO categoryDTO) {
         if (categoryDTO == null) {

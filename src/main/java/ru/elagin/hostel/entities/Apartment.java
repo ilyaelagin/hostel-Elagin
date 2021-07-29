@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import ru.elagin.hostel.dto.ApartmentDTO;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
+@NoArgsConstructor
 @Entity
 @Table(name = "apartments", schema = "HOSTEL")
 @JsonIgnoreProperties("hibernateLazyInitializer")
@@ -37,9 +39,6 @@ public class Apartment {
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "category_id")
     private Category category;
-
-    public Apartment() {
-    }
 
     public Apartment(ApartmentDTO apartmentDTO, Category category) {
         if (apartmentDTO == null) {
