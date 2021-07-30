@@ -3,10 +3,12 @@ package ru.elagin.hostel.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import ru.elagin.hostel.check.CheckMatches;
 import ru.elagin.hostel.dto.GuestDTO;
 import ru.elagin.hostel.entities.Apartment;
 import ru.elagin.hostel.entities.Guest;
 import ru.elagin.hostel.exception.RepositoryException;
+import ru.elagin.hostel.implementation.GuestServiceImpl;
 import ru.elagin.hostel.repository.ApartmentRepository;
 import ru.elagin.hostel.repository.GuestRepository;
 
@@ -16,10 +18,11 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class GuestService {
+public class GuestService implements GuestServiceImpl {
     private final GuestRepository guestRepository;
     private final ApartmentRepository apartmentRepository;
 
+    @Override
     public ResponseEntity<GuestDTO> createGuest(GuestDTO guestDTO) {
         Optional<Guest> guestByPassport = guestRepository.findByPassport(guestDTO.getPassport());
         if (guestByPassport.isPresent()) {
@@ -33,7 +36,8 @@ public class GuestService {
         }
         Apartment apartment = apartmentById.get();
         Guest guest = new Guest(guestDTO, apartment);
-        Guest createdGuest = Optional.of(guestRepository.save(guest)).orElseThrow(() -> new RepositoryException("Guest not saved!"));
+        Guest createdGuest = Optional.of(guestRepository.save(guest)).orElseThrow(
+                () -> new RepositoryException("Guest not saved!"));
         apartment.getGuestSet().add(createdGuest);
 
         return ResponseEntity.ok(new GuestDTO(createdGuest));
@@ -43,19 +47,13 @@ public class GuestService {
         guestRepository.deleteById(id);
     }
 
+    @Override
     public ResponseEntity<Guest> setGuestApartment(Map<String, String> guestIdApartmentId) {
-        if (!guestIdApartmentId.get("guestId").matches("\\d+")) {
-            throw new IllegalArgumentException("Guest id must be numeric!");
-        }
-        Long guestId = Long.valueOf(guestIdApartmentId.get("guestId"));
-
-        if (!guestIdApartmentId.get("apartmentId").matches("\\d+")) {
-            throw new IllegalArgumentException("Apartment id must be numeric!");
-        }
-        Long apartmentId = Long.valueOf(guestIdApartmentId.get("apartmentId"));
-
-        Guest guestToUpdate = guestRepository.findById(guestId).orElseThrow(() -> new RepositoryException("The guest does not exist!"));
-        Apartment apartment = apartmentRepository.findById(apartmentId).orElseThrow(() -> new RepositoryException("The apartment does not exist!"));
+        Map<String, Long> map = CheckMatches.checkMatchesGuestIdApartmentId(guestIdApartmentId);
+        Guest guestToUpdate = guestRepository.findById(map.get("guestId")).orElseThrow(
+                () -> new RepositoryException("The guest does not exist!"));
+        Apartment apartment = apartmentRepository.findById(map.get("apartmentId")).orElseThrow(
+                () -> new RepositoryException("The apartment does not exist!"));
         guestToUpdate.setApartment(apartment);
         apartment.getGuestSet().add(guestToUpdate);
         guestRepository.save(guestToUpdate);
@@ -63,6 +61,7 @@ public class GuestService {
         return ResponseEntity.ok(guestToUpdate);
     }
 
+    @Override
     public ResponseEntity<Guest> updateGuest(GuestDTO guestDTO, Long id) {
         Optional<Guest> guestById = guestRepository.findById(id);
         if (guestById.isEmpty()) {
@@ -83,6 +82,7 @@ public class GuestService {
         return ResponseEntity.ok(guestToUpdate);
     }
 
+    @Override
     public ResponseEntity<List<Guest>> getAllGuest() {
         List<Guest> guestList = guestRepository.findAll();
         if (guestList.isEmpty()) {
@@ -92,6 +92,7 @@ public class GuestService {
         }
     }
 
+    @Override
     public ResponseEntity<Guest> getGuestById(Long id) {
         Optional<Guest> guestById = guestRepository.findById(id);
         if (guestById.isEmpty()) {
@@ -101,6 +102,7 @@ public class GuestService {
         }
     }
 
+    @Override
     public ResponseEntity<Integer> getRoomsApartment(Long id) {
         Optional<Guest> guestById = guestRepository.findById(id);
         if (guestById.isEmpty()) {

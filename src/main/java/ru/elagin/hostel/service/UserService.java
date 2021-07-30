@@ -3,26 +3,27 @@ package ru.elagin.hostel.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import ru.elagin.hostel.check.CheckMatches;
 import ru.elagin.hostel.dto.UserDTO;
 import ru.elagin.hostel.entities.Role;
 import ru.elagin.hostel.entities.User;
+import ru.elagin.hostel.exception.RepositoryException;
+import ru.elagin.hostel.implementation.UserServiceImpl;
 import ru.elagin.hostel.repository.RoleRepository;
 import ru.elagin.hostel.repository.UserRepository;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserService implements UserServiceImpl {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
 
+    @Override
     public ResponseEntity<UserDTO> createUser(UserDTO userDTO) {
-        User userByLogin = userRepository.findByLogin(userDTO.getLogin()).orElse(null);
-        if (userByLogin != null) {
+        Optional<User> userByLogin = userRepository.findByLogin(userDTO.getLogin());
+        if (userByLogin.isPresent()) {
             userDTO.setError("The user has not been saved! A user with such a login already exists in the database!");
             return ResponseEntity.ok(userDTO);
         }
@@ -35,75 +36,52 @@ public class UserService {
             idRolesSet.add(Long.valueOf(id));
         }
         for (Long id : idRolesSet) {
-            Role role = roleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException(
+            Role role = roleRepository.findById(id).orElseThrow(() -> new RepositoryException(
                     "Role with id " + id + " does not exist in the database"));
             rolesSet.add(role);
         }
         User user = new User(userDTO, rolesSet);
-        User createdUser = userRepository.save(user);
-        if (createdUser.getId() == null) {
-            throw new IllegalArgumentException("User not saved!");
-        }
+        User createdUser = Optional.of(userRepository.save(user)).orElseThrow(() -> new RepositoryException("User not saved!"));
+        ;
+
         return ResponseEntity.ok(new UserDTO(createdUser));
     }
 
+    @Override
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
 
+    @Override
     public ResponseEntity<User> setUserRole(Map<String, String> userIdRoleId) {
-        if (!userIdRoleId.get("userId").matches("\\d+")) {
-            throw new IllegalArgumentException("User id must be numeric!");
-        }
-        Long userId = Long.valueOf(userIdRoleId.get("userId"));
+        Map<String, Long> map = CheckMatches.checkMatchesUserIdRoleId(userIdRoleId);
+        Role role = roleRepository.findById(map.get("roleId")).orElseThrow(
+                () -> new RepositoryException("The role does not exist!"));
+        User userToUpdate = userRepository.findById(map.get("userId")).orElseThrow(
+                () -> new RepositoryException("The user does not exist!"));
 
-        if (!userIdRoleId.get("roleId").matches("\\d+")) {
-            throw new IllegalArgumentException("Role id must be numeric!");
-        }
-        Long roleId = Long.valueOf(userIdRoleId.get("roleId"));
-
-        User userToUpdate = userRepository.findById(userId).orElse(null);
-        if (userToUpdate == null) {
-            throw new IllegalArgumentException("The user does not exist!");
-        }
-        Role role = roleRepository.findById(roleId).orElse(null);
-        if (role == null) {
-            throw new IllegalArgumentException("The role does not exist!");
-        }
         userToUpdate.getRoles().add(role);
         userRepository.save(userToUpdate);
 
         return ResponseEntity.ok(userToUpdate);
     }
 
+    @Override
     public ResponseEntity<User> deleteUserRole(Map<String, String> userIdRoleId) {
-        if (!userIdRoleId.get("userId").matches("\\d+")) {
-            throw new IllegalArgumentException("User id must be numeric!");
-        }
-        Long userId = Long.valueOf(userIdRoleId.get("userId"));
-
-        if (!userIdRoleId.get("roleId").matches("\\d+")) {
-            throw new IllegalArgumentException("Role id must be numeric!");
-        }
-        Long roleId = Long.valueOf(userIdRoleId.get("roleId"));
-
-        User userToUpdate = userRepository.findById(userId).orElse(null);
-        if (userToUpdate == null) {
-            throw new IllegalArgumentException("The user does not exist!");
-        }
-        Role role = roleRepository.findById(roleId).orElse(null);
-        if (role == null) {
-            throw new IllegalArgumentException("The role does not exist!");
-        }
-
+        Map<String, Long> map = CheckMatches.checkMatchesUserIdRoleId(userIdRoleId);
+        Role role = roleRepository.findById(map.get("roleId")).orElseThrow(
+                () -> new RepositoryException("The role does not exist!"));
+        User userToUpdate = userRepository.findById(map.get("userId")).orElseThrow(
+                () -> new RepositoryException("The user does not exist!"));
         if (!userToUpdate.getRoles().remove(role)) {
-            throw new IllegalArgumentException("The user does not have such a role!");
+            throw new RepositoryException("The user does not have such a role!");
         }
         userRepository.save(userToUpdate);
 
         return ResponseEntity.ok(userToUpdate);
     }
 
+    @Override
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> userList = userRepository.findAll();
         if (userList.isEmpty()) {
@@ -113,6 +91,7 @@ public class UserService {
         }
     }
 
+    @Override
     public ResponseEntity<String> setUserStatus(Map<String, String> userIdStatus) {
         if (!userIdStatus.get("userId").matches("\\d+")) {
             throw new IllegalArgumentException("User id must be numeric!");
@@ -122,10 +101,7 @@ public class UserService {
         if ((!"active".equals(status)) && (!"banned".equals(status))) {
             throw new IllegalArgumentException("The status must be: active or banned");
         }
-        User userToUpdate = userRepository.findById(userId).orElse(null);
-        if (userToUpdate == null) {
-            throw new IllegalArgumentException("The user does not exist!");
-        }
+        User userToUpdate = userRepository.findById(userId).orElseThrow(() -> new RepositoryException("The user does not exist!"));
         userToUpdate.setStatus(status);
         userRepository.save(userToUpdate);
 
