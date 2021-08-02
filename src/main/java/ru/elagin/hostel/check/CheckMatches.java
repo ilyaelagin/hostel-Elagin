@@ -60,4 +60,17 @@ public class CheckMatches {
 
         return map;
     }
+
+    public static Map<String, String> checkMatchesUserIdStatus(Map<String, String> userIdStatus) {
+        Map<String, String> map = new HashMap<>();
+        if (!userIdStatus.get("userId").matches("\\d+")) {
+            throw new IllegalArgumentException("User id must be numeric!");
+        }
+        String status = userIdStatus.get("status");
+        if ((!"active".equals(status)) && (!"banned".equals(status))) {
+            throw new IllegalArgumentException("The status must be: active or banned");
+        }
+        return map;
+    }
+
 }

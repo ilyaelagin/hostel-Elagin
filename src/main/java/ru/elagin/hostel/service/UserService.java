@@ -42,7 +42,6 @@ public class UserService implements UserServiceImpl {
         }
         User user = new User(userDTO, rolesSet);
         User createdUser = Optional.of(userRepository.save(user)).orElseThrow(() -> new RepositoryException("User not saved!"));
-        ;
 
         return ResponseEntity.ok(new UserDTO(createdUser));
     }
@@ -93,14 +92,9 @@ public class UserService implements UserServiceImpl {
 
     @Override
     public ResponseEntity<String> setUserStatus(Map<String, String> userIdStatus) {
-        if (!userIdStatus.get("userId").matches("\\d+")) {
-            throw new IllegalArgumentException("User id must be numeric!");
-        }
-        Long userId = Long.valueOf(userIdStatus.get("userId"));
-        String status = userIdStatus.get("status");
-        if ((!"active".equals(status)) && (!"banned".equals(status))) {
-            throw new IllegalArgumentException("The status must be: active or banned");
-        }
+        Map<String, String> map = CheckMatches.checkMatchesUserIdStatus(userIdStatus);
+        Long userId = Long.valueOf(map.get("userId"));
+        String status = map.get("status");
         User userToUpdate = userRepository.findById(userId).orElseThrow(() -> new RepositoryException("The user does not exist!"));
         userToUpdate.setStatus(status);
         userRepository.save(userToUpdate);
