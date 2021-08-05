@@ -9,8 +9,8 @@ import ru.elagin.hostel.dto.ApartmentDTO;
 import ru.elagin.hostel.dto.GuestDTO;
 import ru.elagin.hostel.entities.Apartment;
 import ru.elagin.hostel.entities.Guest;
-import ru.elagin.hostel.service.ApartmentService;
-import ru.elagin.hostel.service.GuestService;
+import ru.elagin.hostel.serviceImpl.ApartmentServiceImpl;
+import ru.elagin.hostel.serviceImpl.GuestServiceImpl;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,13 +22,13 @@ import java.util.stream.Collectors;
 
 @SpringBootTest
 @TestPropertySource("/application-test.properties")
-public class GuestServiceTest {
+public class GuestServiceImplTest {
 
     @Autowired
-    private GuestService guestService;
+    private GuestServiceImpl guestService;
 
     @Autowired
-    private ApartmentService apartmentService;
+    private ApartmentServiceImpl apartmentService;
 
     @Test
     public void createGuestTest() {

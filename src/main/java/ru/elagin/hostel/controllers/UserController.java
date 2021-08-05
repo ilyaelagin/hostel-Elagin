@@ -6,7 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.elagin.hostel.dto.UserDTO;
 import ru.elagin.hostel.entities.User;
-import ru.elagin.hostel.service.UserService;
+import ru.elagin.hostel.serviceImpl.UserServiceImpl;
 
 import java.util.List;
 import java.util.Map;
@@ -16,7 +16,7 @@ import java.util.Map;
 @RequestMapping("/users")
 @PreAuthorize("hasRole('admin')")
 public class UserController {
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
     @PostMapping
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.elagin.hostel.dto.ApartmentDTO;
 import ru.elagin.hostel.entities.Apartment;
 import ru.elagin.hostel.entities.Guest;
-import ru.elagin.hostel.service.ApartmentService;
+import ru.elagin.hostel.serviceImpl.ApartmentServiceImpl;
 
 import java.util.List;
 import java.util.Map;
@@ -17,7 +17,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 @RequestMapping("/apartments")
 public class ApartmentController {
-    private final ApartmentService apartmentService;
+    private final ApartmentServiceImpl apartmentService;
 
     @PostMapping
     @PreAuthorize("hasRole('admin')")

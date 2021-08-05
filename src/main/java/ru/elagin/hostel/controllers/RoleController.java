@@ -6,7 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.elagin.hostel.dto.RoleDTO;
 import ru.elagin.hostel.entities.Role;
-import ru.elagin.hostel.service.RoleService;
+import ru.elagin.hostel.serviceImpl.RoleServiceImpl;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/roles")
 @PreAuthorize("hasRole('admin')")
 public class RoleController {
-    private final RoleService roleService;
+    private final RoleServiceImpl roleService;
 
     @PostMapping
     public ResponseEntity<RoleDTO> createRole(@RequestBody RoleDTO roleDTO) {

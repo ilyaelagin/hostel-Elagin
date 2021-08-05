@@ -1,42 +1,16 @@
 package ru.elagin.hostel.service;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import ru.elagin.hostel.dto.CategoryDTO;
 import ru.elagin.hostel.entities.Category;
-import ru.elagin.hostel.exception.RepositoryException;
-import ru.elagin.hostel.implementation.CategoryServiceImpl;
-import ru.elagin.hostel.repository.CategoryRepository;
 
 import java.util.List;
-import java.util.Optional;
 
-@Service
-@RequiredArgsConstructor
-public class CategoryService implements CategoryServiceImpl {
-    private final CategoryRepository categoryRepository;
+public interface CategoryService {
 
-    @Override
-    public ResponseEntity<CategoryDTO> createCategory(CategoryDTO categoryDTO) {
-        Category createdCategory = Optional.of(categoryRepository.save(new Category(categoryDTO))).orElseThrow(
-                () -> new RepositoryException("Category not saved!"));
+    ResponseEntity<CategoryDTO> createCategory(CategoryDTO categoryDTO);
 
-        return ResponseEntity.ok(new CategoryDTO(createdCategory));
-    }
+    void deleteCategory(Long id);
 
-    @Override
-    public void deleteCategory(Long id) {
-        categoryRepository.deleteById(id);
-    }
-
-    @Override
-    public ResponseEntity<List<Category>> getAllCategories() {
-        List<Category> categoryList = categoryRepository.findAll();
-        if (categoryList.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(categoryList);
-        }
-    }
+    ResponseEntity<List<Category>> getAllCategories();
 }

@@ -6,7 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.elagin.hostel.dto.GuestDTO;
 import ru.elagin.hostel.entities.Guest;
-import ru.elagin.hostel.service.GuestService;
+import ru.elagin.hostel.serviceImpl.GuestServiceImpl;
 
 import java.util.List;
 import java.util.Map;
@@ -16,7 +16,7 @@ import java.util.Map;
 @RequestMapping("/guests")
 @PreAuthorize("hasAnyRole('admin', 'dispatcher')")
 public class GuestController {
-    private final GuestService guestService;
+    private final GuestServiceImpl guestService;
 
     @PostMapping
     public ResponseEntity<GuestDTO> createGuest(@RequestBody GuestDTO guestDTO) {

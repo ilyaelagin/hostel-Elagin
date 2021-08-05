@@ -6,7 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.elagin.hostel.dto.CategoryDTO;
 import ru.elagin.hostel.entities.Category;
-import ru.elagin.hostel.service.CategoryService;
+import ru.elagin.hostel.serviceImpl.CategoryServiceImpl;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/categories")
 public class CategoryController {
-    private final CategoryService categoryService;
+    private final CategoryServiceImpl categoryService;
 
     @PostMapping
     @PreAuthorize("hasRole('admin')")
