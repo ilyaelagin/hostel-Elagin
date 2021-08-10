@@ -1,7 +1,10 @@
 package ru.elagin.hostel.serviceImpl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jms.annotation.JmsListener;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 import ru.elagin.hostel.check.CheckMatches;
 import ru.elagin.hostel.dto.GuestDTO;
@@ -21,6 +24,8 @@ import java.util.Optional;
 public class GuestServiceImpl implements GuestService {
     private final GuestRepository guestRepository;
     private final ApartmentRepository apartmentRepository;
+
+    private final JmsTemplate jmsTemplate;
 
     @Override
     public ResponseEntity<GuestDTO> createGuest(GuestDTO guestDTO) {
@@ -100,6 +105,12 @@ public class GuestServiceImpl implements GuestService {
         } else {
             return ResponseEntity.ok(guestById.get());
         }
+    }
+
+    @JmsListener(destination = "hostel-guest-queue-in")
+    public void receiveGuestId(Long guestId) {
+        Guest guest = getGuestById(guestId).getBody();
+        jmsTemplate.convertAndSend("hostel-guest-queue-out", guest);
     }
 
     @Override
