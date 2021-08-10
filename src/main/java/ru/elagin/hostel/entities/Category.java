@@ -5,12 +5,13 @@ import lombok.NoArgsConstructor;
 import ru.elagin.hostel.dto.CategoryDTO;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
 @Entity
 @Table(name = "categories", schema = "HOSTEL")
-public class Category {
+public class Category implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)

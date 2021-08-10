@@ -24,7 +24,6 @@ import java.util.Optional;
 public class GuestServiceImpl implements GuestService {
     private final GuestRepository guestRepository;
     private final ApartmentRepository apartmentRepository;
-
     private final JmsTemplate jmsTemplate;
 
     @Override
@@ -55,10 +54,11 @@ public class GuestServiceImpl implements GuestService {
     @Override
     public ResponseEntity<Guest> setGuestApartment(Map<String, String> guestIdApartmentId) {
         Map<String, Long> map = CheckMatches.checkMatchesGuestIdApartmentId(guestIdApartmentId);
+        jmsTemplate.convertAndSend("hostel-apartment-queue-in", map.get("apartmentId"));
+        Apartment apartment = Optional.ofNullable((Apartment) jmsTemplate.receiveAndConvert("hostel-apartment-queue-out"))
+                .orElseThrow(() -> new RuntimeException("Queue is empty"));
         Guest guestToUpdate = guestRepository.findById(map.get("guestId")).orElseThrow(
                 () -> new RepositoryException("The guest does not exist!"));
-        Apartment apartment = apartmentRepository.findById(map.get("apartmentId")).orElseThrow(
-                () -> new RepositoryException("The apartment does not exist!"));
         guestToUpdate.setApartment(apartment);
         apartment.getGuestSet().add(guestToUpdate);
         guestRepository.save(guestToUpdate);
@@ -105,12 +105,6 @@ public class GuestServiceImpl implements GuestService {
         } else {
             return ResponseEntity.ok(guestById.get());
         }
-    }
-
-    @JmsListener(destination = "hostel-guest-queue-in")
-    public void receiveGuestId(Long guestId) {
-        Guest guest = getGuestById(guestId).getBody();
-        jmsTemplate.convertAndSend("hostel-guest-queue-out", guest);
     }
 
     @Override

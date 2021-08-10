@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import ru.elagin.hostel.dto.ApartmentDTO;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -16,7 +17,7 @@ import java.util.Set;
 @Entity
 @Table(name = "apartments", schema = "HOSTEL")
 @JsonIgnoreProperties("hibernateLazyInitializer")
-public class Apartment {
+public class Apartment implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)

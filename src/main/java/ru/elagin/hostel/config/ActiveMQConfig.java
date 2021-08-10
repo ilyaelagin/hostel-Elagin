@@ -12,13 +12,13 @@ import javax.jms.Queue;
 public class ActiveMQConfig {
 
     @Bean
-    public Queue guestQueueOut() {
-        return new ActiveMQQueue("hostel-guest-queue-out");
+    public Queue guestQueueIn() {
+        return new ActiveMQQueue("hostel-apartment-queue-in");
     }
 
     @Bean
-    public Queue guestQueueIn() {
-        return new ActiveMQQueue("hostel-guest-queue-in");
+    public Queue guestQueueOut() {
+        return new ActiveMQQueue("hostel-apartment-queue-out");
     }
 
 }

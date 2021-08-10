@@ -1,7 +1,10 @@
 package ru.elagin.hostel.serviceImpl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jms.annotation.JmsListener;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 import ru.elagin.hostel.check.CheckMatches;
 import ru.elagin.hostel.dto.ApartmentDTO;
@@ -23,6 +26,7 @@ import java.util.Set;
 public class ApartmentServiceImpl implements ApartmentService {
     private final ApartmentRepository apartmentRepository;
     private final CategoryRepository categoryRepository;
+    private final JmsTemplate jmsTemplate;
 
     @Override
     public ResponseEntity<ApartmentDTO> createApartment(ApartmentDTO apartmentDTO) {
@@ -101,9 +105,18 @@ public class ApartmentServiceImpl implements ApartmentService {
     public ResponseEntity<Apartment> getApartmentById(Long id) {
         Optional<Apartment> apartmentById = apartmentRepository.findById(id);
         if (apartmentById.isEmpty()) {
-            return ResponseEntity.notFound().build();
+//            return ResponseEntity.notFound().build();
+            throw new RepositoryException("The apartment does not exist!");
         } else {
             return ResponseEntity.ok(apartmentById.get());
         }
+    }
+
+    @JmsListener(destination = "hostel-apartment-queue-in")
+    public void receiveApartmentId(Long apartmentId) {
+        Apartment apartment = Optional.ofNullable(getApartmentById(apartmentId).getBody())
+                .orElseThrow(() -> new RepositoryException("The apartment does not exist!"));
+
+        jmsTemplate.convertAndSend("hostel-apartment-queue-out", apartment);
     }
 }

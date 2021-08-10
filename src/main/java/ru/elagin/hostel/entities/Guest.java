@@ -7,13 +7,14 @@ import lombok.ToString;
 import ru.elagin.hostel.dto.GuestDTO;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
 @Entity
 @Table(name = "guests", schema = "HOSTEL")
-public class Guest {
+public class Guest implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
