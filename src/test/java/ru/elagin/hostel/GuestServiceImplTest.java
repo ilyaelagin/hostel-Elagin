@@ -9,8 +9,8 @@ import ru.elagin.hostel.dto.ApartmentDTO;
 import ru.elagin.hostel.dto.GuestDTO;
 import ru.elagin.hostel.entities.Apartment;
 import ru.elagin.hostel.entities.Guest;
-import ru.elagin.hostel.serviceImpl.ApartmentServiceImpl;
-import ru.elagin.hostel.serviceImpl.GuestServiceImpl;
+import ru.elagin.hostel.service.impl.ApartmentServiceImpl;
+import ru.elagin.hostel.service.impl.GuestServiceImpl;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

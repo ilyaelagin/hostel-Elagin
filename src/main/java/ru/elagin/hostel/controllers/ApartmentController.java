@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.elagin.hostel.dto.ApartmentDTO;
 import ru.elagin.hostel.entities.Apartment;
 import ru.elagin.hostel.entities.Guest;
-import ru.elagin.hostel.serviceImpl.ApartmentServiceImpl;
+import ru.elagin.hostel.service.impl.ApartmentServiceImpl;
 
 import java.util.List;
 import java.util.Map;

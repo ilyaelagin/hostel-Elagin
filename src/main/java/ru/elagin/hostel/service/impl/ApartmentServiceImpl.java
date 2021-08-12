@@ -1,4 +1,4 @@
-package ru.elagin.hostel.serviceImpl;
+package ru.elagin.hostel.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.elagin.hostel.check.CheckMatches;
 import ru.elagin.hostel.dto.ApartmentDTO;
 import ru.elagin.hostel.entities.Apartment;
@@ -105,8 +106,7 @@ public class ApartmentServiceImpl implements ApartmentService {
     public ResponseEntity<Apartment> getApartmentById(Long id) {
         Optional<Apartment> apartmentById = apartmentRepository.findById(id);
         if (apartmentById.isEmpty()) {
-//            return ResponseEntity.notFound().build();
-            throw new RepositoryException("The apartment does not exist!");
+            throw new RepositoryException("Apartment with id: " + id + " does not exist!");
         } else {
             return ResponseEntity.ok(apartmentById.get());
         }

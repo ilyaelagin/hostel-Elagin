@@ -6,7 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.elagin.hostel.dto.GuestDTO;
 import ru.elagin.hostel.entities.Guest;
-import ru.elagin.hostel.serviceImpl.GuestServiceImpl;
+import ru.elagin.hostel.service.impl.GuestServiceImpl;
 
 import java.util.List;
 import java.util.Map;

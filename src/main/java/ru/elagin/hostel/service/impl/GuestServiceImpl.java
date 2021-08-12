@@ -1,4 +1,4 @@
-package ru.elagin.hostel.serviceImpl;
+package ru.elagin.hostel.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
