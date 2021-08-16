@@ -2,6 +2,8 @@ package ru.elagin.hostel.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jms.annotation.JmsListener;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 import ru.elagin.hostel.dto.RoleDTO;
 import ru.elagin.hostel.entities.Role;
@@ -16,6 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
+    private final JmsTemplate jmsTemplateTopic;
 
     @Override
     public ResponseEntity<RoleDTO> createRole(RoleDTO roleDTO) {
@@ -38,5 +41,12 @@ public class RoleServiceImpl implements RoleService {
         } else {
             return ResponseEntity.ok(roleList);
         }
+    }
+
+    @JmsListener(destination = "hostel-role-topic-in")
+    public void receiveRoleId(Long roleId) {
+        Role role = roleRepository.findById(roleId).orElseThrow(
+                () -> new RepositoryException("Role with id " + roleId + " does not exist!"));
+        jmsTemplateTopic.convertAndSend("hostel-role-topic-out", role);
     }
 }

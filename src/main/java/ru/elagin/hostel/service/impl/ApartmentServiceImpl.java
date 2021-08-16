@@ -5,6 +5,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.listener.adapter.ListenerExecutionFailedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.elagin.hostel.check.CheckMatches;
@@ -115,8 +116,7 @@ public class ApartmentServiceImpl implements ApartmentService {
     @JmsListener(destination = "hostel-apartment-queue-in")
     public void receiveApartmentId(Long apartmentId) {
         Apartment apartment = Optional.ofNullable(getApartmentById(apartmentId).getBody())
-                .orElseThrow(() -> new RepositoryException("The apartment does not exist!"));
-
+                .orElseThrow(() -> new RepositoryException("Apartment with id: " + apartmentId + " does not exist!"));
         jmsTemplate.convertAndSend("hostel-apartment-queue-out", apartment);
     }
 }

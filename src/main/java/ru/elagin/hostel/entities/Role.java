@@ -5,12 +5,13 @@ import lombok.NoArgsConstructor;
 import ru.elagin.hostel.dto.RoleDTO;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
 @Entity
 @Table(name = "roles", schema = "HOSTEL")
-public class Role {
+public class Role implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
@@ -30,5 +31,4 @@ public class Role {
             this.name = roleDTO.getName();
         }
     }
-
 }

@@ -2,6 +2,7 @@ package ru.elagin.hostel.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 import ru.elagin.hostel.check.CheckMatches;
 import ru.elagin.hostel.dto.UserDTO;
@@ -19,6 +20,7 @@ import java.util.*;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final JmsTemplate jmsTemplateTopic;
 
     @Override
     public ResponseEntity<UserDTO> createUser(UserDTO userDTO) {
@@ -54,11 +56,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<User> setUserRole(Map<String, String> userIdRoleId) {
         Map<String, Long> map = CheckMatches.checkMatchesUserIdRoleId(userIdRoleId);
-        Role role = roleRepository.findById(map.get("roleId")).orElseThrow(
-                () -> new RepositoryException("The role does not exist!"));
+        jmsTemplateTopic.convertAndSend("hostel-role-topic-in", map.get("roleId"));
+        Role role = (Role) jmsTemplateTopic.receiveAndConvert("hostel-role-topic-out");
         User userToUpdate = userRepository.findById(map.get("userId")).orElseThrow(
                 () -> new RepositoryException("The user does not exist!"));
-
         userToUpdate.getRoles().add(role);
         userRepository.save(userToUpdate);
 
