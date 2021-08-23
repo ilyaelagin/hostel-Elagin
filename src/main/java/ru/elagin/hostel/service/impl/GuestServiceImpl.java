@@ -98,6 +98,7 @@ public class GuestServiceImpl implements GuestService {
     }
 
     @Override
+    @Cacheable(cacheNames = {"caffeineCache"})
     public ResponseEntity<Guest> getGuestById(Long id) {
         Optional<Guest> guestById = guestRepository.findById(id);
         if (guestById.isEmpty()) {

@@ -104,6 +104,7 @@ public class ApartmentServiceImpl implements ApartmentService {
     }
 
     @Override
+    @Cacheable(cacheNames = {"caffeineCache"})
     public ResponseEntity<Apartment> getApartmentById(Long id) {
         Optional<Apartment> apartmentById = apartmentRepository.findById(id);
         if (apartmentById.isEmpty()) {

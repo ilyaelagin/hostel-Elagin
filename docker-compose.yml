@@ -1,0 +1,18 @@
+version: "1"
+
+volumes:
+  hostel-DB:
+
+services:
+  hostel-Elagin-1.0.0:
+    build: .
+    ports:
+      - 8080:8080
+    container_name: hostel-Elagin-1.0.0
+    links:
+      - activemq
+  activemq:
+    image: rmohr/activemq
+    ports:
+      - 61616:61616
+      - 8161:8161
