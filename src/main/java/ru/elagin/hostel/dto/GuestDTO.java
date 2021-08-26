@@ -1,11 +1,13 @@
 package ru.elagin.hostel.dto;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.elagin.hostel.entities.Guest;
 
 import java.util.Arrays;
 
 @Data
+@NoArgsConstructor
 public class GuestDTO {
     private String id;
     private String name;
@@ -17,9 +19,6 @@ public class GuestDTO {
     private String checkOut;
     private Long apartmentId;
     private String error;
-
-    public GuestDTO() {
-    }
 
     public GuestDTO(Guest guest) {
         if (guest == null) {

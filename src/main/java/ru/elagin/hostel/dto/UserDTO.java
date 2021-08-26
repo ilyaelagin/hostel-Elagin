@@ -1,6 +1,7 @@
 package ru.elagin.hostel.dto;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.elagin.hostel.entities.User;
 
 import java.util.Set;
@@ -8,6 +9,7 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Data
+@NoArgsConstructor
 public class UserDTO {
     private String id;
     private String name;
@@ -17,9 +19,6 @@ public class UserDTO {
     private Set<String> rolesId;
     private String status;
     private String error;
-
-    public UserDTO() {
-    }
 
     public UserDTO(User user) {
         if (user == null) {

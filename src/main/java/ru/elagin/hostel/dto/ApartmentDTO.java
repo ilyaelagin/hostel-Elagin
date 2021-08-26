@@ -1,9 +1,11 @@
 package ru.elagin.hostel.dto;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.elagin.hostel.entities.Apartment;
 
 @Data
+@NoArgsConstructor
 public class ApartmentDTO {
     private String id;
     private String number;
@@ -11,9 +13,6 @@ public class ApartmentDTO {
     private String cleaning;
     private Long categoryId;
     private String error;
-
-    public ApartmentDTO() {
-    }
 
     public ApartmentDTO(Apartment apartment) {
         if (apartment == null) {

@@ -1,16 +1,15 @@
 package ru.elagin.hostel.dto;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.elagin.hostel.entities.Category;
 
 @Data
+@NoArgsConstructor
 public class CategoryDTO {
     private String id;
     private String name;
     private String description;
-
-    public CategoryDTO() {
-    }
 
     public CategoryDTO(Category category) {
         if (category == null) {

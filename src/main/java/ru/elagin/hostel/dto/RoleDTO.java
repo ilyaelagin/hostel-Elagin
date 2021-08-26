@@ -1,15 +1,14 @@
 package ru.elagin.hostel.dto;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.elagin.hostel.entities.Role;
 
 @Data
+@NoArgsConstructor
 public class RoleDTO {
     private String id;
     private String name;
-
-    public RoleDTO() {
-    }
 
     public RoleDTO(Role role) {
         if (role == null) {
