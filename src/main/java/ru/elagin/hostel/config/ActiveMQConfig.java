@@ -33,4 +33,10 @@ public class ActiveMQConfig {
     public Topic roleTopicQueueOut() {
         return new ActiveMQTopic("hostel-role-topic-out");
     }
+
+    @Bean
+    public Topic guestBirthTopicQueue() {
+        return new ActiveMQTopic("hostel-guest-birth-topic");
+    }
+
 }

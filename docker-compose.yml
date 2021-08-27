@@ -1,14 +1,14 @@
-version: "1"
+version: "3"
 
 volumes:
   hostel-DB:
 
 services:
-  hostel-Elagin-1.0.0:
+  app:
     build: .
     ports:
       - 8080:8080
-    container_name: hostel-Elagin-1.0.0
+    container_name: app
     links:
       - activemq
   activemq:

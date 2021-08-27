@@ -14,10 +14,7 @@ import ru.elagin.hostel.service.impl.GuestServiceImpl;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @SpringBootTest
@@ -81,26 +78,9 @@ public class GuestServiceImplTest {
         guestIdApartmentId.put("guestId", "1");
         guestIdApartmentId.put("apartmentId", "3");
 
-        Guest guestToUpdate = guestService.setGuestApartment(guestIdApartmentId).getBody();
+        Guest guestToUpdate = Optional.ofNullable(guestService.setGuestApartment(guestIdApartmentId).getBody()).orElse(new Guest());
         Apartment apartmentById = apartmentService.getApartmentById(3L).getBody();
 
-        Assertions.assertEquals(apartmentById.getId(), guestToUpdate.getApartment().getId());
-        Assertions.assertEquals(apartmentById.getNumber(), guestToUpdate.getApartment().getNumber());
-        Assertions.assertEquals(apartmentById.getCleaning(), guestToUpdate.getApartment().getCleaning());
-
-        Set<Guest> guestList1 = apartmentById.getGuestSet();
-        Set<Guest> guestList2 = guestToUpdate.getApartment().getGuestSet();
-        Assertions.assertEquals(guestList1.size(), guestList2.size());
-        Guest guest1 = guestList1.stream().filter(guest -> guest.getId()==1L).collect(Collectors.toList()).get(0);
-        Guest guest2 = guestList2.stream().filter(guest -> guest.getId()==1L).collect(Collectors.toList()).get(0);
-        Assertions.assertEquals(guest1.getId(),guest2.getId());
-        Assertions.assertEquals(guest1.getName(), guest2.getName());
-        Assertions.assertEquals(guest1.getSurname(), guest2.getSurname());
-        Assertions.assertEquals(guest1.getPassport(), guest2.getPassport());
-        Assertions.assertArrayEquals(guest1.getFoto(), guest2.getFoto());
-        Assertions.assertEquals(guest1.getBirth(), guest2.getBirth());
-        Assertions.assertEquals(guest1.getCheckIn(), guest1.getCheckIn());
-        Assertions.assertEquals(guest1.getCheckOut(), guest2.getCheckOut());
-        Assertions.assertEquals(guest1.getApartment().getId(), guest2.getApartment().getId());
+        Assertions.assertEquals(guestToUpdate.getApartment(), apartmentById);
     }
 }

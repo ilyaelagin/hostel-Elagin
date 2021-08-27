@@ -2,9 +2,10 @@ package ru.elagin.hostel.akka;
 
 import akka.actor.UntypedActor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-import org.springframework.http.ResponseEntity;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 import ru.elagin.hostel.entities.Guest;
 import ru.elagin.hostel.service.GuestService;
@@ -17,9 +18,10 @@ import java.util.Optional;
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @RequiredArgsConstructor
+@Slf4j
 public class GuestBirthActor extends UntypedActor {
-
     private final GuestService guestService;
+    private final JmsTemplate jmsTemplateTopic;
 
     @Override
     public void onReceive(Object message) {
@@ -31,15 +33,16 @@ public class GuestBirthActor extends UntypedActor {
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM");
                     if (LocalDate.now().format(formatter).equals(guest.getBirth().format(formatter))) {
                         count++;
-                        System.out.println("Today is the birthday of the " + guest.getName() + " " + guest.getSurname() + "!");
-                        ResponseEntity.ok(guest);
+                        jmsTemplateTopic.convertAndSend("hostel-guest-birth-topic",
+                                "Today is the guest's birthday: " + guest.getName() + " " + guest.getSurname() + "!");
+                        log.info((String) jmsTemplateTopic.receiveAndConvert("hostel-guest-birth-topic"));
                     }
                 }
                 if (count == 0) {
-                    System.out.println("No guests birthdays today!");
+                    log.info("No guests birthdays today!");
                 }
             } else {
-                System.out.println("Guest list is empty!");
+                log.info("Guest list is empty!");
             }
         } else {
             unhandled(message);

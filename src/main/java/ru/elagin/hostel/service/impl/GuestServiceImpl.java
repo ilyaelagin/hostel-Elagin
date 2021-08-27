@@ -61,8 +61,10 @@ public class GuestServiceImpl implements GuestService {
                 .orElseThrow(() -> new RuntimeException("Queue is empty"));
         Guest guestToUpdate = guestRepository.findById(map.get("guestId")).orElseThrow(
                 () -> new RepositoryException("The guest does not exist!"));
+
         guestToUpdate.setApartment(apartment);
-        apartment.getGuestSet().add(guestToUpdate);
+//        apartment.getGuestSet().add(guestToUpdate);
+//        apartmentRepository.saveAndFlush(apartment);
         guestRepository.save(guestToUpdate);
 
         return ResponseEntity.ok(guestToUpdate);
