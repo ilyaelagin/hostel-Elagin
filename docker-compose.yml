@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 
 volumes:
   hostel-DB:
@@ -14,5 +14,9 @@ services:
   activemq:
     image: rmohr/activemq
     ports:
-      - 61616:61616
+      - 1883:1883
+      - 5672:5672
       - 8161:8161
+      - 61613:61613
+      - 61614:61614
+      - 61616:61616
