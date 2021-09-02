@@ -1,9 +1,8 @@
 package ru.elagin.hostel.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheConfig;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
@@ -23,10 +22,12 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class GuestServiceImpl implements GuestService {
     private final GuestRepository guestRepository;
     private final ApartmentRepository apartmentRepository;
     private final JmsTemplate jmsTemplate;
+    private final JmsTemplate jmsTemplateTopic;
 
     @Override
     public ResponseEntity<GuestDTO> createGuest(GuestDTO guestDTO) {
@@ -44,9 +45,16 @@ public class GuestServiceImpl implements GuestService {
         Guest guest = new Guest(guestDTO, apartment);
         Guest createdGuest = Optional.of(guestRepository.save(guest)).orElseThrow(
                 () -> new RepositoryException("Guest not saved!"));
+        jmsTemplateTopic.convertAndSend("hostel-new-guest-topic", createdGuest);
         apartment.getGuestSet().add(createdGuest);
 
         return ResponseEntity.ok(new GuestDTO(createdGuest));
+    }
+
+    @JmsListener(destination = "hostel-new-guest-topic")
+    public void receiveNewGuestTopic(Guest guest) {
+        log.info("A new guest has been added to the system: " + guest.getName() + " " + guest.getSurname() +
+                ", passport: " + guest.getPassport());
     }
 
     public void deleteGuest(Long id) {
@@ -61,10 +69,7 @@ public class GuestServiceImpl implements GuestService {
                 .orElseThrow(() -> new RuntimeException("Queue is empty"));
         Guest guestToUpdate = guestRepository.findById(map.get("guestId")).orElseThrow(
                 () -> new RepositoryException("The guest does not exist!"));
-
         guestToUpdate.setApartment(apartment);
-//        apartment.getGuestSet().add(guestToUpdate);
-//        apartmentRepository.saveAndFlush(apartment);
         guestRepository.save(guestToUpdate);
 
         return ResponseEntity.ok(guestToUpdate);

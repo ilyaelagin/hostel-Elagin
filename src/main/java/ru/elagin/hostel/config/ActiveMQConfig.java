@@ -15,28 +15,33 @@ import javax.jms.Topic;
 public class ActiveMQConfig {
 
     @Bean
-    public Queue guestQueueIn() {
+    public Queue apartmentQueueIn() {
         return new ActiveMQQueue("hostel-apartment-queue-in");
     }
 
     @Bean
-    public Queue guestQueueOut() {
+    public Queue apartmentQueueOut() {
         return new ActiveMQQueue("hostel-apartment-queue-out");
     }
 
     @Bean
-    public Topic roleTopicQueueIn() {
-        return new ActiveMQTopic("hostel-role-topic-in");
+    public Topic roleQueueIn() {
+        return new ActiveMQTopic("hostel-role-queue-in");
     }
 
     @Bean
-    public Topic roleTopicQueueOut() {
-        return new ActiveMQTopic("hostel-role-topic-out");
+    public Topic roleQueueOut() {
+        return new ActiveMQTopic("hostel-role-queue-out");
     }
 
     @Bean
-    public Topic guestBirthTopicQueue() {
+    public Topic guestBirthTopic() {
         return new ActiveMQTopic("hostel-guest-birth-topic");
+    }
+
+    @Bean
+    public Topic newGuestTopic() {
+        return new ActiveMQTopic("hostel-new-guest-topic");
     }
 
 }

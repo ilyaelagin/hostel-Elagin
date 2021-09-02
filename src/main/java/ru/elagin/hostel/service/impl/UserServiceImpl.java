@@ -20,7 +20,7 @@ import java.util.*;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final JmsTemplate jmsTemplateTopic;
+    private final JmsTemplate jmsTemplate;
 
     @Override
     public ResponseEntity<UserDTO> createUser(UserDTO userDTO) {
@@ -56,8 +56,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<User> setUserRole(Map<String, String> userIdRoleId) {
         Map<String, Long> map = CheckMatches.checkMatchesUserIdRoleId(userIdRoleId);
-        jmsTemplateTopic.convertAndSend("hostel-role-topic-in", map.get("roleId"));
-        Role role = (Role) jmsTemplateTopic.receiveAndConvert("hostel-role-topic-out");
+        jmsTemplate.convertAndSend("hostel-role-queue-in", map.get("roleId"));
+        Role role = (Role) jmsTemplate.receiveAndConvert("hostel-role-queue-out");
         User userToUpdate = userRepository.findById(map.get("userId")).orElseThrow(
                 () -> new RepositoryException("The user does not exist!"));
         userToUpdate.getRoles().add(role);

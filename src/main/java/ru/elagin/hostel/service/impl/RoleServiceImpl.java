@@ -43,10 +43,10 @@ public class RoleServiceImpl implements RoleService {
         }
     }
 
-    @JmsListener(destination = "hostel-role-topic-in")
+    @JmsListener(destination = "hostel-role-queue-in")
     public void receiveRoleId(Long roleId) {
         Role role = roleRepository.findById(roleId).orElseThrow(
                 () -> new RepositoryException("Role with id " + roleId + " does not exist!"));
-        jmsTemplateTopic.convertAndSend("hostel-role-topic-out", role);
+        jmsTemplateTopic.convertAndSend("hostel-role-queue-out", role);
     }
 }
